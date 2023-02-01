@@ -1,0 +1,80 @@
+.bg_container {
+  // background-image: url("https://r4.wallpaperflare.com/wallpaper/319/609/287/graffiti-street-art-colorful-wall-wallpaper-06a83ee7291e6502fd92e823b417431e.jpg");
+
+  background-repeat: space;
+}
+
+.app__wrapper {
+  max-width: 750px;
+  width: 100%;
+  margin: 0 auto;
+}
+.appHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 60px;
+  margin-bottom: 10px;
+}
+
+.header_button {
+  display: flex;
+  justify-content: space-between;
+}
+
+.content__wrapper {
+  background-color: var(--bg-2);
+  padding: 2rem;
+  border-radius: 12px;
+}
+.emptyText {
+  // display: inline-block;
+  font-size: 1.6rem;
+  font-weight: 500;
+  color: var(--black-2);
+  text-align: center;
+  margin: 0 auto;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  background-color: var(--gray-2);
+  width: max-content;
+  height: auto;
+}
+
+.timeRange {
+  background-color: var(--bg-3);
+  border-radius: 6px;
+  padding: 0 5px;
+  div div input {
+    font-family: "Raleway", sans-serif;
+    font-size: 1.2rem;
+
+    color: var(--black-2);
+  }
+
+  button {
+    rect {
+      stroke: var(--black-1);
+    }
+    line {
+      stroke: var(--black-1);
+    }
+    color: var(--black-1);
+    font-family: "Raleway", sans-serif;
+    transition: all 500ms cubic-bezier(0.075, 0.82, 0.165, 1);
+  }
+  button:hover {
+    rect {
+      stroke: var(--black-2);
+    }
+    line {
+      stroke: var(--black-2);
+    }
+  }
+  div {
+    border: none;
+  }
+  span {
+    color: var(--black-2);
+  }
+}

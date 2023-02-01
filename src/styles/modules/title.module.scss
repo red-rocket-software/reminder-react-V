@@ -1,0 +1,23 @@
+.header {
+  font-family: "Raleway", sans-serif;
+  background-color: var(--white-transparent);
+  display: inline-block;
+  // width: 50%;
+  // display: block;
+  // text-align: center;
+  font-size: 4rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  // text-align: center;
+  display: block;
+  width: 40%;
+  margin: 0 auto;
+
+  // margin-top: 2rem;
+  padding: 5px;
+  text-align: center;
+  border: solid transparent 1px;
+  border-radius: 5px;
+  margin-bottom: 1.5rem;
+  color: var(--black);
+}

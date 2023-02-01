@@ -1,0 +1,39 @@
+.button {
+  display: inline-block;
+  outline: none;
+  height: auto;
+  padding: 0.8rem 2rem;
+  border: none;
+  border-radius: 6px;
+  font-weight: 500;
+  font-size: 1.6rem;
+  text-decoration: none;
+  text-transform: capitalize;
+  cursor: pointer;
+  overflow: hidden;
+  margin: 0 5px;
+  &__select {
+    color: var(--black-2);
+    font-family: Poppins;
+    padding: 1rem;
+    border: none;
+    background-color: var(--bg-3);
+    width: 160px;
+    cursor: pointer;
+  }
+}
+.button--primary {
+  background-color: var(--primaryGreen);
+  color: var(--white);
+}
+.button--secondary {
+  background-color: var(--bg-3);
+  color: var(--black-1);
+}
+
+.button--more {
+  background-color: var(--yellow);
+  color: var(--black-1);
+  margin: 0 auto;
+  display: block;
+}
