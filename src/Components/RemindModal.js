@@ -62,10 +62,10 @@ function RemindModal({
       if (type === "add") {
         onCreate({
           description: description,
-          created_at: moment(new Date()).format("DD.MM.YYYY, HH:MM:SS"),
+          created_at: moment(new Date()).format("DD.MM.YYYY, HH:MM:00"),
           deadline_at: moment(deadline_at).format("YYYY-MM-DDTHH:MM"),
         });
-        setDeadline_at(moment(new Date()).format("YYYY-MM-DD"));
+        setDeadline_at(moment(new Date()).format("YYYY-MM-DDTHH:MM"));
         setModalOpen(false);
       }
       if (type === "update") {

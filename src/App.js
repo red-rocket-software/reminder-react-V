@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useContext } from "react";
 import { Toaster } from "react-hot-toast";
 import PageTitle from "./Components/PageTitle";
 import AppHeader from "./Components/AppHeader";
@@ -107,11 +107,15 @@ function App() {
           },
         })
         .then(({ data }) => {
-          setReminds((prev) =>
-            JSON.stringify(prev) === JSON.stringify(data.todos)
-              ? prev
-              : [...prev, ...data.todos]
-          );
+          if (cur === 0) {
+            setReminds(data.todos);
+          } else {
+            setReminds((prev) =>
+              JSON.stringify(prev) === JSON.stringify(data.todos)
+                ? prev
+                : [...prev, ...data.todos]
+            );
+          }
           checkForMoreReminds(data.pageInfo.nextCursor);
           setCursor(data.pageInfo.nextCursor);
         });

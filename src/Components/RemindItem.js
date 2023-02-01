@@ -75,7 +75,7 @@ function RemindItem({ remind, onUpdateRemind, onDeleteRemind }) {
             <p className={styles.time}>
               {remind.completed &&
                 "finished at: " +
-                  moment(remind.finished_at).format("DD-MM-YYYY HH:MM:SS")}
+                  moment(remind.finished_at).format("DD-MM-YYYY HH:MM:00")}
             </p>
           </div>
         </div>
