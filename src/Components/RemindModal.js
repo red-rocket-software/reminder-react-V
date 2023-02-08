@@ -62,8 +62,8 @@ function RemindModal({
       if (type === "add") {
         onCreate({
           description: description,
-          created_at: moment(new Date()).format("DD.MM.YYYY, HH:MM:00"),
-          deadline_at: moment(deadline_at).format("YYYY-MM-DDTHH:MM"),
+          created_at: moment(new Date()).format("DD.MM.YYYY, hh:mm:ss"),
+          deadline_at: moment(deadline_at).format("YYYY-MM-DDThh:mm"),
         });
         setDeadline_at(new Date());
         setModalOpen(false);
