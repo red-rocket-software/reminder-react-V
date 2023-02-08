@@ -40,8 +40,8 @@ function AppHeader({
         break;
       case "completed":
         onGetCompleted(0, [
-          moment(context.timeRange[0]).format("YYYY-MM-DDTHH:MM"),
-          moment(context.timeRange[1]).format("YYYY-MM-DDTHH:MM"),
+          moment(context.timeRange[0]).format("YYYY-MM-DDThh:mm"),
+          moment(context.timeRange[1]).format("YYYY-MM-DDThh:mm"),
         ]);
 
         break;

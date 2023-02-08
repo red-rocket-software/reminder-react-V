@@ -43,11 +43,16 @@ function App() {
           },
         })
         .then(({ data }) => {
-          setReminds((prev) =>
-            JSON.stringify(prev) === JSON.stringify(data.todos)
-              ? prev
-              : [...prev, ...data.todos]
-          );
+          setReminds((prev) => {
+            if (
+              JSON.stringify(prev) === JSON.stringify(data.todos) ||
+              data.todos.length === 0
+            ) {
+              return prev;
+            } else {
+              return [...prev, ...data.todos];
+            }
+          });
           checkForMoreReminds(data.pageInfo.nextCursor);
           setCursor(data.pageInfo.nextCursor);
         });
