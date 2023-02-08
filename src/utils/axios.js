@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const instance = axios.create({
-  baseURL: "https://reminder-api-oz2kvyderq-uc.a.run.app/",
+  baseURL: "https://reminder-go-deployment-bk4spykuta-uc.a.run.app",
 });
 
 export default instance;

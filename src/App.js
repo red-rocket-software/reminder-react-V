@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useContext } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Toaster } from "react-hot-toast";
 import PageTitle from "./Components/PageTitle";
 import AppHeader from "./Components/AppHeader";
@@ -58,7 +58,6 @@ function App() {
 
   const createRemind = async (data) => {
     try {
-      console.log(data);
       await axios.post("/remind", data);
       if (context.filter === "all" || context.filter === "current") {
         setReminds((prev) => [data, ...prev]);
@@ -162,22 +161,14 @@ function App() {
         setReminds(
           reminds
             .slice()
-            .sort(
-              (a, b) =>
-                moment(a.deadline_at, "YYYY-DD-MM").unix() -
-                moment(b.deadline_at, "YYYY-DD-MM").unix()
-            )
+            .sort((a, b) => moment(a.deadline_at).diff(moment(b.deadline_at)))
         );
         break;
       case "created":
         setReminds(
           reminds
             .slice()
-            .sort(
-              (a, b) =>
-                moment(a.created_at, "YYYY-DD-MM").unix() -
-                moment(b.created_at, "YYYY-DD-MM").unix()
-            )
+            .sort((a, b) => moment(a.created_at).diff(moment(b.created_at)))
         );
         break;
       default:
