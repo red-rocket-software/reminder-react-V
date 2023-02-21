@@ -7,7 +7,7 @@ import moment from "moment";
 
 import Context from "../utils/context";
 
-function AppHeader({
+function ContentHeader({
   onCreate,
   onGetAll,
   onGetCompleted,
@@ -111,4 +111,4 @@ function AppHeader({
   );
 }
 
-export default AppHeader;
+export default ContentHeader;

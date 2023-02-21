@@ -1,8 +1,12 @@
 import React, { useState, useEffect, useCallback } from "react";
+import { Routes, Route } from "react-router-dom";
+
 import { Toaster } from "react-hot-toast";
 import PageTitle from "./Components/PageTitle";
-import AppHeader from "./Components/AppHeader";
-import AppContent from "./Components/AppContent";
+import { Home } from "./pages/Home";
+import { Login } from "./pages/Login/Login";
+import { Registration } from "./pages/Registration/Registration";
+import { Header } from "./Components/Header";
 import styles from "./styles/modules/app.module.scss";
 import axios from "./utils/axios";
 import moment from "moment";
@@ -191,17 +195,39 @@ function App() {
   return (
     <Context.Provider value={[context, setContext]}>
       <div className={styles.bg_container}>
+        <Header />
         <div className="container">
           <PageTitle>Reminder GO</PageTitle>
           <div className={styles.app__wrapper}>
-            <AppHeader
+            {/* <AppHeader
               onCreate={createRemind}
               onGetAll={getAllReminds}
               onGetCompleted={getCompletedReminds}
               onGetCurrent={getCurrentReminds}
               onSort={onSortReminds}
-            />
-            <AppContent
+            /> */}
+            <Routes>
+              <Route
+                path="/"
+                element={
+                  <Home
+                    createRemind={createRemind}
+                    getAllReminds={getAllReminds}
+                    getCompletedReminds={getCompletedReminds}
+                    getCurrentReminds={getCurrentReminds}
+                    onSortReminds={onSortReminds}
+                    reminds={reminds}
+                    updateRemind={updateRemind}
+                    deleteRemind={deleteRemind}
+                    noMoreReminds={noMoreReminds}
+                    cursor={cursor}
+                  />
+                }
+              />
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Registration />} />
+            </Routes>
+            {/* <AppContent
               reminds={reminds}
               onUpdateRemind={updateRemind}
               onDeleteRemind={deleteRemind}
@@ -210,7 +236,7 @@ function App() {
               onGetCurrent={getCurrentReminds}
               noMoreReminds={noMoreReminds}
               cursor={cursor}
-            />
+            /> */}
           </div>
         </div>
 
