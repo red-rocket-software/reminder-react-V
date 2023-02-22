@@ -1,0 +1,26 @@
+.oauth{
+    margin-top: 10px;
+}
+
+.oauthList {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2em;
+  list-style: none;
+}
+
+.icon {
+  color: var(--black);
+  -webkit-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+  cursor: pointer;
+
+  &:hover {
+    color: var(--black-2);
+    transform: scale(1.1);
+
+    -webkit-filter: drop-shadow(3px 3px 2px rgba(150, 147, 147, 0.7));
+    filter: drop-shadow(3px 3px 2px rgba(185, 184, 184, 0.7));
+  }
+}

@@ -9,11 +9,11 @@
 }
 
 :root {
-  --primaryGreen: #3fc250; //*
-  --black-1: #2f303d; //*
+  --primaryGreen: #3fc250;
+  --black-1: #2f303d;
   --black-2: #585858;
   --bg-1: #f8f8ff;
-  --bg-2: #91d7ffc2; //*
+  --bg-2: #91d7ffc2;
   --bg-3: #cccdde;
   --gray-1: #eee;
   --gray-2: #dedfe1;
@@ -21,6 +21,8 @@
   --white: white;
   --white-transparent: rgba(255, 255, 255, 0.521);
   --yellow: rgb(249, 252, 69);
+  --login-btn: #4b6cb7;
+  --login-btn-active: #395591;
 }
 
 html {
@@ -38,7 +40,8 @@ body {
 }
 
 .container {
-  padding: 2rem 0 2rem;
+  // padding: 2rem 0 2rem;
+  padding-top: 1rem;
   width: 90%;
   max-width: 1200px;
   margin: 0 auto;

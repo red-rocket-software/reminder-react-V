@@ -4,6 +4,8 @@ import RemindItem from "./RemindItem";
 import styles from "../styles/modules/app.module.scss";
 import Button from "./Button";
 
+import { useDispatch, useSelector } from "react-redux";
+
 import Context from "../utils/context";
 
 const container = {
@@ -36,6 +38,17 @@ function AppContent({
   cursor,
 }) {
   const [context, setContext] = useContext(Context);
+
+  //! uncomment when redux will be ready
+  // const dispatch = useDispatch()
+  // const { reminds } = useSelector((state) => state.reminds)
+  // const authData = useSelector((state) => state.auth.user)
+
+  // useEffect(() => {
+  //   dispatch(fetchReminds())
+  // }, [])
+  // return (
+  //! uncomment when redux will be ready
 
   const onLoadMoreButton = useCallback(
     (type) => {
