@@ -64,18 +64,18 @@ function RemindItem({ remind, onUpdateRemind, onDeleteRemind }) {
           </div>
           <div className={styles.texts}>
             <p className={styles.time}>
-              created: {moment(remind.created_at).format("DD-MM-YYYY HH:MM:SS")}
+              created: {moment(remind.created_at).format("DD-MM-YYYY hh:mm:ss")}
             </p>
 
             <p className={styles.time}>
               deadline:{" "}
-              {moment(remind.deadline_at).format("DD-MM-YYYY HH:MM:SS")}
+              {moment(remind.deadline_at).format("DD-MM-YYYY hh:mm:ss")}
             </p>
 
             <p className={styles.time}>
               {remind.completed &&
                 "finished at: " +
-                  moment(remind.finished_at).format("DD-MM-YYYY HH:MM:SS")}
+                  moment(remind.finished_at).format("DD-MM-YYYY hh:mm:00")}
             </p>
           </div>
         </div>

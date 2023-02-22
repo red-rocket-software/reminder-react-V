@@ -1,3 +1,4 @@
+/* eslint-disable no-fallthrough */
 import React, { useEffect, useState, useContext, useCallback } from "react";
 import styles from "../styles/modules/app.module.scss";
 import Button, { SelectButton } from "./Button";
@@ -39,19 +40,17 @@ function ContentHeader({
         break;
       case "completed":
         onGetCompleted(0, [
-          moment(context.timeRange[0]).format("YYYY-MM-DDTHH:MM"),
-          moment(context.timeRange[1]).format("YYYY-MM-DDTHH:MM"),
+          moment(context.timeRange[0]).format("YYYY-MM-DDThh:mm"),
+          moment(context.timeRange[1]).format("YYYY-MM-DDThh:mm"),
         ]);
 
         break;
       case "current":
         onGetCurrent(0);
-        break
 
       default:
         break;
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [context.filter, context.timeRange]);
 
   return (
@@ -78,11 +77,11 @@ function ContentHeader({
                 onSort(e.target.value);
               }}
             >
-              <option value="created" key="created">
-                Created
-              </option>
               <option value="deadline" key="deadline">
                 Deadline
+              </option>
+              <option value="created" key="created">
+                Created
               </option>
             </SelectButton>
           </div>

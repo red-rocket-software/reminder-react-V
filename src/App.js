@@ -47,11 +47,16 @@ function App() {
           },
         })
         .then(({ data }) => {
-          setReminds((prev) =>
-            JSON.stringify(prev) === JSON.stringify(data.todos)
-              ? prev
-              : [...prev, ...data.todos]
-          );
+          setReminds((prev) => {
+            if (
+              JSON.stringify(prev) === JSON.stringify(data.todos) ||
+              data.todos.length === 0
+            ) {
+              return prev;
+            } else {
+              return [...prev, ...data.todos];
+            }
+          });
           checkForMoreReminds(data.pageInfo.nextCursor);
           setCursor(data.pageInfo.nextCursor);
         });
@@ -62,7 +67,6 @@ function App() {
 
   const createRemind = async (data) => {
     try {
-      console.log(data);
       await axios.post("/remind", data);
       if (context.filter === "all" || context.filter === "current") {
         setReminds((prev) => [data, ...prev]);
@@ -111,11 +115,15 @@ function App() {
           },
         })
         .then(({ data }) => {
-          setReminds((prev) =>
-            JSON.stringify(prev) === JSON.stringify(data.todos)
-              ? prev
-              : [...prev, ...data.todos]
-          );
+          if (cur === 0) {
+            setReminds(data.todos);
+          } else {
+            setReminds((prev) =>
+              JSON.stringify(prev) === JSON.stringify(data.todos)
+                ? prev
+                : [...prev, ...data.todos]
+            );
+          }
           checkForMoreReminds(data.pageInfo.nextCursor);
           setCursor(data.pageInfo.nextCursor);
         });
@@ -162,22 +170,14 @@ function App() {
         setReminds(
           reminds
             .slice()
-            .sort(
-              (a, b) =>
-                moment(a.deadline_at, "YYYY-DD-MM").unix() -
-                moment(b.deadline_at, "YYYY-DD-MM").unix()
-            )
+            .sort((a, b) => moment(a.deadline_at).diff(moment(b.deadline_at)))
         );
         break;
       case "created":
         setReminds(
           reminds
             .slice()
-            .sort(
-              (a, b) =>
-                moment(a.created_at, "YYYY-DD-MM").unix() -
-                moment(b.created_at, "YYYY-DD-MM").unix()
-            )
+            .sort((a, b) => moment(a.created_at).diff(moment(b.created_at)))
         );
         break;
       default:

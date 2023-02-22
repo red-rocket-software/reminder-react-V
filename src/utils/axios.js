@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const instance = axios.create({
-  baseURL: "http://localhost:8000/",
+  baseURL: "https://reminder-go-deployment-bk4spykuta-uc.a.run.app",
 });
 
 export default instance;

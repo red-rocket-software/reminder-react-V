@@ -44,7 +44,7 @@ function RemindModal({
     if (type === "update") {
       setDescription(remind.description);
       setCompleted(remind.completed);
-      setDeadline_at(remind.deadline_at);
+      setDeadline_at(new Date(remind.deadline_at));
     } else if (type === "add") {
       setDescription("");
       setCompleted(false);
@@ -62,10 +62,10 @@ function RemindModal({
       if (type === "add") {
         onCreate({
           description: description,
-          created_at: moment(new Date()).format("DD.MM.YYYY, HH:MM:SS"),
-          deadline_at: moment(deadline_at).format("YYYY-MM-DDTHH:MM"),
+          created_at: moment(new Date()).format("DD.MM.YYYY, hh:mm:ss"),
+          deadline_at: moment(deadline_at).format("YYYY-MM-DDThh:mm"),
         });
-        setDeadline_at(moment(new Date()).format("YYYY-MM-DD"));
+        setDeadline_at(new Date());
         setModalOpen(false);
       }
       if (type === "update") {
