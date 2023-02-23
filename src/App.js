@@ -12,6 +12,8 @@ import axios from "./utils/axios";
 import moment from "moment";
 import toast from "react-hot-toast";
 
+import { useSelector, useDispatch } from "react-redux";
+
 import Context from "./utils/context";
 
 const limit = 5;
@@ -36,6 +38,13 @@ function App() {
     getAllReminds();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // ! uncomment when redux will be ready
+  // const dispatch = useDispatch();
+  // React.useEffect(() => {
+  //   dispatch(fetchAuthMe());
+  // }, []);
+  // !
 
   const getAllReminds = async (cur) => {
     try {
@@ -199,13 +208,6 @@ function App() {
         <div className="container">
           <PageTitle>Reminder GO</PageTitle>
           <div className={styles.app__wrapper}>
-            {/* <AppHeader
-              onCreate={createRemind}
-              onGetAll={getAllReminds}
-              onGetCompleted={getCompletedReminds}
-              onGetCurrent={getCurrentReminds}
-              onSort={onSortReminds}
-            /> */}
             <Routes>
               <Route
                 path="/"
@@ -227,16 +229,6 @@ function App() {
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Registration />} />
             </Routes>
-            {/* <AppContent
-              reminds={reminds}
-              onUpdateRemind={updateRemind}
-              onDeleteRemind={deleteRemind}
-              onGetAll={getAllReminds}
-              onGetCompleted={getCompletedReminds}
-              onGetCurrent={getCurrentReminds}
-              noMoreReminds={noMoreReminds}
-              cursor={cursor}
-            /> */}
           </div>
         </div>
 
