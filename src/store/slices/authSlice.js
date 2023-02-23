@@ -15,6 +15,11 @@ export const fetchLogout = createAsyncThunk('auth/fetchLogout', async () => {
     await axios.get('/logout')
 })
 
+export const fetchMe = createAsyncThunk('auth/fetchMe', async () => {
+    const { data } = await axios.get('/me')
+    return data;
+})
+
 const initialState = {
     user: null,
     status: 'loading',
@@ -35,6 +40,19 @@ const authSlice = createSlice({
             state.status = 'loaded'
         },
         [fetchLogin.rejected]: (state, action) => {
+            state.user = null
+            state.status = 'error'
+            state.error = action.error.message
+        },
+        [fetchMe.pending]: (state) => {
+            state.user = null
+            state.status = 'loading'
+        },
+        [fetchMe.fulfilled]: (state, action) => {
+            state.user = action.payload
+            state.status = 'loaded'
+        },
+        [fetchMe.rejected]: (state, action) => {
             state.user = null
             state.status = 'error'
             state.error = action.error.message
