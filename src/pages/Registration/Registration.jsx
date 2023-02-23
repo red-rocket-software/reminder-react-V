@@ -3,13 +3,18 @@ import styles from "../../styles/modules/login.module.scss";
 import { Formik } from "formik";
 import { registrationSchema } from "../../utils/schemas";
 import Oauth from "../../Components/Oauth";
-
-import axios from "../../utils/axios";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { fetchRegister } from "../../store/slices/authSlice";
 
 export const Registration = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const handleSubmit = async (values) => {
     console.log(values);
-    await axios.post("/auth/register", values).then((data) => console.log(data.headers));
+    const data = await dispatch(fetchRegister(values));
+    console.log(data);
   };
 
   return (
