@@ -4,15 +4,20 @@ import { Formik } from "formik";
 import { registrationSchema } from "../../utils/schemas";
 import Oauth from "../../Components/Oauth";
 
+import axios from "../../utils/axios";
+
 export const Registration = () => {
+  const handleSubmit = async (values) => {
+    console.log(values);
+    await axios.post("/auth/register", values).then((data) => console.log(data.headers));
+  };
+
   return (
     <div className={styles.formWrapper}>
       <Formik
         validationSchema={registrationSchema}
-        initialValues={{ email: "", password: "" }}
-        onSubmit={(values) => {
-          console.log(JSON.stringify(values));
-        }}
+        initialValues={{ email: "", name: "", password: "" }}
+        onSubmit={handleSubmit}
       >
         {({
           values,

@@ -16,8 +16,8 @@ export const Header = () => {
           {isAuth ? (
             <>
               <div className={styles.avatar}>
-                <MdAccountCircle size="3em"/>
                 <p>name</p>
+                <MdAccountCircle size="3em"/>
               </div>
             </>
           ) : (
