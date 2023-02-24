@@ -15,6 +15,7 @@ import toast from "react-hot-toast";
 import { useSelector, useDispatch } from "react-redux";
 
 import Context from "./utils/context";
+import { fetchReminds } from "./store/slices/remindSlice";
 
 const limit = 5;
 
@@ -22,11 +23,12 @@ function App() {
   const [reminds, setReminds] = useState([]);
   const [cursor, setCursor] = useState(0);
   const [noMoreReminds, setNoMoreReminds] = useState(true);
-
   const [context, setContext] = useState({
     filter: "all",
     timeRange: [new Date(), new Date()],
   });
+
+  const dispatch = useDispatch()
 
   useEffect(() => {
     setReminds([]);
@@ -35,16 +37,9 @@ function App() {
 
   // fetch all reminds in first render of app
   useEffect(() => {
-    getAllReminds();
+    getAllReminds()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  // ! uncomment when redux will be ready
-  // const dispatch = useDispatch();
-  // React.useEffect(() => {
-  //   dispatch(fetchAuthMe());
-  // }, []);
-  // !
 
   const getAllReminds = async (cur) => {
     try {

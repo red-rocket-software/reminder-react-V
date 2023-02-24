@@ -4,7 +4,9 @@ import axios from "../../utils/axios.js";
 export const fetchLogin = createAsyncThunk(
   "auth/fetchLogin",
   async (params) => {
-    const { data } = await axios.post("/login", params);
+    const { data } = await axios.post("/login", params, {
+        withCredentials: true,
+    });
     return data;
   }
 );
@@ -18,22 +20,20 @@ export const fetchRegister = createAsyncThunk(
 );
 
 export const fetchLogout = createAsyncThunk("auth/fetchLogout", async () => {
-  await axios.get("/logout");
+  await axios.get("/logout", {
+    withCredentials: true,
+  });
 });
 
-export const fetchMe = createAsyncThunk('auth/fetchMe', async () => {
-    const { data } = await axios.get('/me')
-    return data;
-})
-
 const initialState = {
-  user: null,
+  user: JSON.parse(localStorage.getItem('userInfo')),
+  isAuth: Boolean(localStorage.getItem('userInfo')),
   status: "loading",
   error: null,
 };
 
 const authSlice = createSlice({
-  name: "remind",
+  name: "auth",
   initialState,
   reducers: {},
   extraReducers: {
@@ -44,6 +44,7 @@ const authSlice = createSlice({
     [fetchLogin.fulfilled]: (state, action) => {
       state.user = action.payload;
       state.status = "loaded";
+      state.isAuth = true;
     },
     [fetchLogin.rejected]: (state, action) => {
       state.user = null;
@@ -52,6 +53,7 @@ const authSlice = createSlice({
     },
     [fetchLogout.fulfilled]: (state) => {
       state.user = null;
+      state.isAuth = false;
     },
     [fetchRegister.pending]: (state) => {
       state.user = null;

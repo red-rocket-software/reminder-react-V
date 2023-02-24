@@ -12,20 +12,17 @@ export const Registration = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const isAuth = useSelector((state) => Boolean(state.auth.user));
-
   const handleSubmit = async (values) => {
     try {
-      await dispatch(fetchRegister(values));
+      const data = await dispatch(fetchRegister(values));
+      console.log(data);
+      navigate('/login');
       toast.success("Successfully registered");
     } catch (error) {
       toast.success("Failed to register");
     }
   };
 
-  if (isAuth) {
-    return navigate("/");
-  }
 
   return (
     <div className={styles.formWrapper}>

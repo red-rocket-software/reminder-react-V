@@ -13,20 +13,17 @@ export const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const isAuth = useSelector((state) => Boolean(state.auth.user));
-
   const handleSubmit = async (values) => {
     try {
-      await dispatch(fetchLogin(values));
+      const data = await dispatch(fetchLogin(values));
+      const userData = {name: data.payload.name, email: data.payload.email, avatarURL: data.payload.photo}
+      localStorage.setItem('userInfo', JSON.stringify(userData))
       toast.success("Logged in Successfully"); 
+      navigate('/')
     } catch (error) {
       toast.success("Failed to login");
     }
   };
-
-  if (isAuth) {
-    return navigate("/");
-  }
 
   return (
     <div className={styles.formWrapper}>
