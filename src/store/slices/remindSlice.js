@@ -57,7 +57,7 @@ const remindSlice = createSlice({
         [fetchReminds.rejected]: (state, action) => {
             state.reminds.status = 'error';
             state.reminds.items = [];
-            state.reminds.error = action.arror.message;
+            state.reminds.error = action.error.message;
         },
         //create  remind
         [createRemind.fulfilled]: (state, action) => {

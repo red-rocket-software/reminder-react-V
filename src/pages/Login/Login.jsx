@@ -7,19 +7,26 @@ import { fetchLogin } from "../../store/slices/authSlice";
 import { Formik } from "formik";
 import { loginSchema } from "../../utils/schemas";
 import styles from "../../styles/modules/login.module.scss";
+import toast from "react-hot-toast";
 
 export const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const isAuth = useSelector((state) => Boolean(state.auth.user));
+
   const handleSubmit = async (values) => {
     try {
-      const data = await dispatch(fetchLogin(values));
-      console.log(data);
+      await dispatch(fetchLogin(values));
+      toast.success("Logged in Successfully"); 
     } catch (error) {
-      console.log(error);
+      toast.success("Failed to login");
     }
   };
+
+  if (isAuth) {
+    return navigate("/");
+  }
 
   return (
     <div className={styles.formWrapper}>

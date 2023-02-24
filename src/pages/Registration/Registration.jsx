@@ -6,16 +6,26 @@ import Oauth from "../../Components/Oauth";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { fetchRegister } from "../../store/slices/authSlice";
+import toast from "react-hot-toast";
 
 export const Registration = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const isAuth = useSelector((state) => Boolean(state.auth.user));
+
   const handleSubmit = async (values) => {
-    console.log(values);
-    const data = await dispatch(fetchRegister(values));
-    console.log(data);
+    try {
+      await dispatch(fetchRegister(values));
+      toast.success("Successfully registered");
+    } catch (error) {
+      toast.success("Failed to register");
+    }
   };
+
+  if (isAuth) {
+    return navigate("/");
+  }
 
   return (
     <div className={styles.formWrapper}>

@@ -2,9 +2,12 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import styles from "../styles/modules/header.module.scss";
 import { MdAccountCircle } from "react-icons/md";
+import {  useSelector } from "react-redux";
+
 
 export const Header = () => {
-  const [isAuth, setIsAuth] = useState(false);
+  const isAuth = useSelector((state) => Boolean(state.auth.user));
+
 
   return (
     <div className={styles.container}>
