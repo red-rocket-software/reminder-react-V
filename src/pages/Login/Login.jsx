@@ -1,47 +1,39 @@
 import React from "react";
 import Oauth from "../../Components/Oauth";
-// import { useDispatch, useSelector } from "react-redux";
-// import { useNavigate } from "react-router-dom";
-// import { fetchAuth } from "../../redux/slices/auth";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { fetchLogin } from "../../store/slices/authSlice";
 
 import { Formik } from "formik";
-import {loginSchema} from "../../utils/schemas"
-// import * as Yup from "yup";
-
+import { loginSchema } from "../../utils/schemas";
 import styles from "../../styles/modules/login.module.scss";
-// import toast from "react-hot-toast";
-
-
-
-
+import toast from "react-hot-toast";
 
 export const Login = () => {
-  // const dispatch = useDispatch();
-  // const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  // const isAuth = useSelector((state) => Boolean(state.auth.user));
+  const isAuth = useSelector((state) => Boolean(state.auth.user));
 
-  // const onSubmit = async (values) => {
-  //   const data = await dispatch(fetchAuth(values));
-  //   if ("token" in data.payload) {
-  //     window.localStorage.setItem("token", data.payload.token);
-  //   } else {
-  //     toast.error("Failed to login");
-  //   }
-  // };
+  const handleSubmit = async (values) => {
+    try {
+      await dispatch(fetchLogin(values));
+      toast.success("Logged in Successfully"); 
+    } catch (error) {
+      toast.success("Failed to login");
+    }
+  };
 
-  // if (isAuth) {
-  //   return navigate("/");
-  // }
+  if (isAuth) {
+    return navigate("/");
+  }
 
   return (
     <div className={styles.formWrapper}>
       <Formik
         validationSchema={loginSchema}
         initialValues={{ email: "", password: "" }}
-        onSubmit={(values) => {
-          console.log(JSON.stringify(values));
-        }}
+        onSubmit={handleSubmit}
       >
         {({
           values,
@@ -85,8 +77,8 @@ export const Login = () => {
           </div>
         )}
       </Formik>
-          <b>OR USE</b>
-      <Oauth/>
+      <b>OR USE</b>
+      <Oauth />
     </div>
   );
 };

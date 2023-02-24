@@ -3,14 +3,29 @@ import styles from "../../styles/modules/login.module.scss";
 import { Formik } from "formik";
 import { registrationSchema } from "../../utils/schemas";
 import Oauth from "../../Components/Oauth";
-
-import axios from "../../utils/axios";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { fetchRegister } from "../../store/slices/authSlice";
+import toast from "react-hot-toast";
 
 export const Registration = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const isAuth = useSelector((state) => Boolean(state.auth.user));
+
   const handleSubmit = async (values) => {
-    console.log(values);
-    await axios.post("/auth/register", values).then((data) => console.log(data.headers));
+    try {
+      await dispatch(fetchRegister(values));
+      toast.success("Successfully registered");
+    } catch (error) {
+      toast.success("Failed to register");
+    }
   };
+
+  if (isAuth) {
+    return navigate("/");
+  }
 
   return (
     <div className={styles.formWrapper}>
