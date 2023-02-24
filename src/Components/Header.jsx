@@ -2,12 +2,22 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import styles from "../styles/modules/header.module.scss";
 import { MdAccountCircle } from "react-icons/md";
-import {  useSelector } from "react-redux";
-
+import { useDispatch, useSelector } from "react-redux";
+import UserBar from "./UserBar";
 
 export const Header = () => {
-  const isAuth = useSelector((state) => Boolean(state.auth.user));
-
+  const isAuth = true
+  const firstLeter = "P"
+  //const isAuth = useSelector((state) => Boolean(state.auth.user))
+  const {user}  = useSelector((state) => state.auth)
+  // const firstLeter = isAuth && user.fullName.split(' ').map((el) => el[0].toUpperCase())
+  const dispatch = useDispatch()
+  // function onClickLogout() {
+  //   if (window.confirm('Are you sure you want to log out')) {
+  //     dispatch(logout())
+  //     window.localStorage.removeItem('user')
+  //   }
+  // };
 
   return (
     <div className={styles.container}>
@@ -18,10 +28,8 @@ export const Header = () => {
         <div className={styles.buttons}>
           {isAuth ? (
             <>
-              <div className={styles.avatar}>
-                <p>name</p>
-                <MdAccountCircle size="3em"/>
-              </div>
+             <UserBar {...user} firstLeter = {firstLeter}/>
+             <button type="submit">Log out</button>
             </>
           ) : (
             <div className={styles.auth}>
