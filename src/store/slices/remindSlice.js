@@ -9,27 +9,29 @@ export const fetchReminds = createAsyncThunk(
     const {data} = await axios.get(
         listParam === 'completed' 
         ? `/${listParam}?limit=${limit}&cursor=${cursor}&start=${start}&end=${end}`
-        : `/${listParam}?limit=${limit}&cursor=${cursor}`)
+        : `/${listParam}?limit=${limit}&cursor=${cursor}`, {
+            withCredentials: true,
+        })
 
     return data;
 })
 
 export const createRemind = createAsyncThunk('remind/createRemind', async (remind) => {
-   const {data} =  axios.post(`/remind`, remind)
+   const {data} =  axios.post(`/remind`, remind, {withCredentials: true})
    return data;
 })
 
 export const removeRemind = createAsyncThunk('remind/removeRemind', async (id) => {
-    axios.delete(`/remind/${id}`)
+    axios.delete(`/remind/${id}`, {withCredentials: true})
 })
 
 export const updateRemind = createAsyncThunk('remind/udateRemind', async (id, remind) => {
-    const {data} = axios.put(`/remind/${id}`, remind)
+    const {data} = axios.put(`/remind/${id}`, remind, {withCredentials: true});
     return data;
 })
 
 export const upateRemindStatus = createAsyncThunk('remind/udateRemindStatus', async (id, status) => {
-   axios.put(`/remind/${id}`, status)
+   axios.put(`/remind/${id}`, status, {withCredentials: true});
 })
 
 const initialState = {

@@ -13,7 +13,7 @@ function UserBar({avatarUrl, name, firstLeter}) {
           
           </div>
           <div className={styles.userDetails}>
-            <span className={styles.userName}>Pavel</span>
+            <span className={styles.userName}>{name}</span>
           </div>
         </div>
       );

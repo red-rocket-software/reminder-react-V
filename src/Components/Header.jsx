@@ -1,23 +1,22 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import styles from "../styles/modules/header.module.scss";
-import { MdAccountCircle } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
 import UserBar from "./UserBar";
+import { fetchLogout } from "../store/slices/authSlice";
 
 export const Header = () => {
-  const isAuth = true
-  const firstLeter = "P"
-  //const isAuth = useSelector((state) => Boolean(state.auth.user))
+  const isAuth = useSelector((state) => state.auth.isAuth)
   const {user}  = useSelector((state) => state.auth)
-  // const firstLeter = isAuth && user.fullName.split(' ').map((el) => el[0].toUpperCase())
+  const firstLeter = isAuth && user.name.split(' ').map((el) => el[0].toUpperCase())
   const dispatch = useDispatch()
-  // function onClickLogout() {
-  //   if (window.confirm('Are you sure you want to log out')) {
-  //     dispatch(logout())
-  //     window.localStorage.removeItem('user')
-  //   }
-  // };
+
+  function onClickLogout() {
+    if (window.confirm('Are you sure you want to log out')) {
+      dispatch(fetchLogout())
+      window.localStorage.removeItem('userInfo')
+    }
+  };
 
   return (
     <div className={styles.container}>
@@ -29,7 +28,7 @@ export const Header = () => {
           {isAuth ? (
             <>
              <UserBar {...user} firstLeter = {firstLeter}/>
-             <button type="submit">Log out</button>
+             <button type="submit" onClick={onClickLogout}>Log out</button>
             </>
           ) : (
             <div className={styles.auth}>
