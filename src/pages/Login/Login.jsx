@@ -3,15 +3,20 @@ import Oauth from "../../Components/Oauth";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { fetchLogin } from "../../store/slices/authSlice";
-
 import { Formik } from "formik";
-import { loginSchema } from "../../utils/schemas";
-import styles from "../../styles/modules/login.module.scss";
 import toast from "react-hot-toast";
+
+import styles from "../../styles/modules/login.module.scss";
+
+import { loginSchema } from "../../utils/schemas";
 
 export const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+
+
+  const isAuth = useSelector((state) => Boolean(state.auth.user));
 
   const handleSubmit = async (values) => {
     try {
