@@ -1,8 +1,10 @@
-import React, { useCallback, useContext } from "react";
+import React, { useState, useContext, useEffect, useCallback } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { AnimatePresence, motion } from "framer-motion";
 import RemindItem from "./RemindItem";
 import styles from "../styles/modules/app.module.scss";
 import Button from "./Button";
+import { fetchReminds } from "../store/slices/remindSlice";
 
 import Context from "../utils/context";
 
@@ -37,11 +39,33 @@ function AppContent({
 }) {
   const [context, setContext] = useContext(Context);
 
+  const dispatch = useDispatch();
+
+  const { nextCursor, page } = useSelector((state) => state.reminds.pageInfo);
+  console.log("nextCursor, page: ", nextCursor, page);
+
+  useEffect(() => {
+    dispatch(
+      fetchReminds({
+        listParam: "remind",
+        cursor: nextCursor,
+        limit: page.limit,
+      })
+    );
+  }, []);
+
   const onLoadMoreButton = useCallback(
     (type) => {
       switch (type) {
         case "all":
           onGetAll(cursor);
+          dispatch(
+            fetchReminds({
+              listParam: reminds,
+              cursor: nextCursor,
+              limit: page.limit,
+            })
+          );
           break;
         case "completed":
           onGetCompleted(cursor, context.timeRange);
