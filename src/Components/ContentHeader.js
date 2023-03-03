@@ -5,6 +5,10 @@ import Button, { SelectButton } from "./Button";
 import RemindModal from "./RemindModal";
 import DateTimeRangePicker from "@wojtekmaj/react-datetimerange-picker";
 import moment from "moment";
+import toast from "react-hot-toast";
+
+import { useSelector, useDispatch } from "react-redux";
+import { createRemind } from "../store/slices/remindSlice";
 
 import Context from "../utils/context";
 
@@ -17,6 +21,34 @@ function ContentHeader({
 }) {
   const [context, setContext] = useContext(Context);
   const [modalOpen, setModalOpen] = useState(false);
+
+  const dispatch = useDispatch();
+
+  const onCreateRemind = useCallback(
+    (data) => {
+      try {
+        dispatch(createRemind(data));
+        toast.success("Remind Added Successfully");
+      } catch (error) {
+        toast.error("Failed To Add Remind");
+        console.log(error);
+      }
+    },
+    [dispatch]
+  );
+
+  // const createRemind = async (data) => {
+  //   try {
+  //     await axios.post("/remind", data);
+  //     if (context.filter === "all" || context.filter === "current") {
+  //       setReminds((prev) => [data, ...prev]);
+  //     }
+  //     toast.success("Remind Added Successfully");
+  //   } catch (error) {
+  //     toast.error("Failed To Add Remind");
+  //     console.log(error);
+  //   }
+  // };
 
   const updatedFilter = useCallback(
     (e) => {
@@ -102,7 +134,7 @@ function ContentHeader({
 
       <RemindModal
         type="add"
-        onCreate={onCreate}
+        onCreate={onCreateRemind}
         modalOpen={modalOpen}
         setModalOpen={setModalOpen}
       />
