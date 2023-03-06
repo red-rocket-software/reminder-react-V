@@ -35,52 +35,52 @@ function App() {
     setCursor(0);
   }, [context.filter]);
 
-  // fetch all reminds in first render of app
-  useEffect(() => {
-    getAllReminds()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  // // fetch all reminds in first render of app
+  // useEffect(() => {
+  //   getAllReminds()
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, []);
 
-  const getAllReminds = async (cur) => {
-    try {
-      await axios
-        .get(`/remind`, {
-          params: {
-            cursor: cur !== 0 ? cursor : 0,
-            limit: limit,
-          },
-        })
-        .then(({ data }) => {
-          setReminds((prev) => {
-            if (
-              JSON.stringify(prev) === JSON.stringify(data.todos) ||
-              data.todos.length === 0
-            ) {
-              return prev;
-            } else {
-              return [...prev, ...data.todos];
-            }
-          });
-          checkForMoreReminds(data.pageInfo.nextCursor);
-          setCursor(data.pageInfo.nextCursor);
-        });
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  // const getAllReminds = async (cur) => {
+  //   try {
+  //     await axios
+  //       .get(`/remind`, {
+  //         params: {
+  //           cursor: cur !== 0 ? cursor : 0,
+  //           limit: limit,
+  //         },
+  //       })
+  //       .then(({ data }) => {
+  //         setReminds((prev) => {
+  //           if (
+  //             JSON.stringify(prev) === JSON.stringify(data.todos) ||
+  //             data.todos.length === 0
+  //           ) {
+  //             return prev;
+  //           } else {
+  //             return [...prev, ...data.todos];
+  //           }
+  //         });
+  //         checkForMoreReminds(data.pageInfo.nextCursor);
+  //         setCursor(data.pageInfo.nextCursor);
+  //       });
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
-  const createRemind = async (data) => {
-    try {
-      await axios.post("/remind", data);
-      if (context.filter === "all" || context.filter === "current") {
-        setReminds((prev) => [data, ...prev]);
-      }
-      toast.success("Remind Added Successfully");
-    } catch (error) {
-      toast.error("Failed To Add Remind");
-      console.log(error);
-    }
-  };
+  // const createRemind = async (data) => {
+  //   try {
+  //     await axios.post("/remind", data);
+  //     if (context.filter === "all" || context.filter === "current") {
+  //       setReminds((prev) => [data, ...prev]);
+  //     }
+  //     toast.success("Remind Added Successfully");
+  //   } catch (error) {
+  //     toast.error("Failed To Add Remind");
+  //     console.log(error);
+  //   }
+  // };
 
   const updateRemind = async (data) => {
     try {
@@ -209,12 +209,12 @@ function App() {
                 exact
                 element={
                   <Home
-                    createRemind={createRemind}
-                    getAllReminds={getAllReminds}
+                    // createRemind={createRemind}
+                    // getAllReminds={getAllReminds}
                     getCompletedReminds={getCompletedReminds}
                     getCurrentReminds={getCurrentReminds}
                     onSortReminds={onSortReminds}
-                    reminds={reminds}
+                    // reminds={reminds}
                     updateRemind={updateRemind}
                     deleteRemind={deleteRemind}
                     noMoreReminds={noMoreReminds}

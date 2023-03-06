@@ -8,13 +8,17 @@ import moment from "moment";
 import toast from "react-hot-toast";
 
 import { useSelector, useDispatch } from "react-redux";
-import { createRemind } from "../store/slices/remindSlice";
+import {
+  createRemind,
+  fetchReminds,
+  updateFilter,
+} from "../store/slices/remindSlice";
 
 import Context from "../utils/context";
 
 function ContentHeader({
-  onCreate,
-  onGetAll,
+  // onCreate,
+  // onGetAll,
   onGetCompleted,
   onGetCurrent,
   onSort,
@@ -23,6 +27,9 @@ function ContentHeader({
   const [modalOpen, setModalOpen] = useState(false);
 
   const dispatch = useDispatch();
+
+  const { page } = useSelector((state) => state.reminds.pageInfo);
+  const { filter } = useSelector((state) => state.reminds);
 
   const onCreateRemind = useCallback(
     (data) => {
@@ -37,25 +44,11 @@ function ContentHeader({
     [dispatch]
   );
 
-  // const createRemind = async (data) => {
-  //   try {
-  //     await axios.post("/remind", data);
-  //     if (context.filter === "all" || context.filter === "current") {
-  //       setReminds((prev) => [data, ...prev]);
-  //     }
-  //     toast.success("Remind Added Successfully");
-  //   } catch (error) {
-  //     toast.error("Failed To Add Remind");
-  //     console.log(error);
-  //   }
-  // };
-
   const updatedFilter = useCallback(
     (e) => {
-      e.preventDefault();
-      setContext((prevState) => ({ ...prevState, filter: e.target.value }));
+      dispatch(updateFilter(e.target.value));
     },
-    [setContext]
+    [dispatch]
   );
 
   const onTimeRange = useCallback(
@@ -66,24 +59,41 @@ function ContentHeader({
   );
 
   useEffect(() => {
-    switch (context.filter) {
+    switch (filter) {
       case "all":
-        onGetAll(0);
+        dispatch(
+          fetchReminds({
+            listParam: "remind",
+            cursor: 0,
+            limit: page.limit,
+          })
+        );
         break;
       case "completed":
-        onGetCompleted(0, [
-          moment(context.timeRange[0]).format("YYYY-MM-DDThh:mm"),
-          moment(context.timeRange[1]).format("YYYY-MM-DDThh:mm"),
-        ]);
+        dispatch(
+          fetchReminds({
+            listParam: "completed",
+            cursor: 0,
+            limit: page.limit,
+            start: moment(context.timeRange[0]).format("YYYY-MM-DDTHH:MM:SS"),
+            end: moment(context.timeRange[1]).format("YYYY-MM-DDTHH:MM:SS"),
+          })
+        );
 
         break;
       case "current":
-        onGetCurrent(0);
+        dispatch(
+          fetchReminds({
+            listParam: "current",
+            cursor: 0,
+            limit: page.limit,
+          })
+        );
 
       default:
         break;
     }
-  }, [context.filter, context.timeRange]);
+  }, [filter, context.timeRange]);
 
   return (
     <div className={styles.appHeader}>

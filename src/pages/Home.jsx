@@ -4,31 +4,31 @@ import AppContent from "../Components/AppContent";
 import { useSelector } from "react-redux";
 
 export const Home = ({
-  createRemind,
+  // createRemind,
   getAllReminds,
   getCompletedReminds,
   getCurrentReminds,
   onSortReminds,
-  reminds,
+  // reminds,
   updateRemind,
-  deleteRemind,
+  // deleteRemind,
   noMoreReminds,
   cursor,
 }) => {
-  const isAuth = useSelector((state) => Boolean(state.auth.isAuth))
-  return  isAuth ? (
+  const isAuth = useSelector((state) => Boolean(state.auth.isAuth));
+  return isAuth ? (
     <>
       <ContentHeader
-        onCreate={createRemind}
+        // onCreate={createRemind}
         onGetAll={getAllReminds}
         onGetCompleted={getCompletedReminds}
         onGetCurrent={getCurrentReminds}
         onSort={onSortReminds}
       />
       <AppContent
-        reminds={reminds}
+        // reminds={reminds}
         onUpdateRemind={updateRemind}
-        onDeleteRemind={deleteRemind}
+        // onDeleteRemind={deleteRemind}
         onGetAll={getAllReminds}
         onGetCompleted={getCompletedReminds}
         onGetCurrent={getCurrentReminds}
@@ -36,9 +36,9 @@ export const Home = ({
         cursor={cursor}
       />
     </>
-  )
-  :(
-    <h1 style={{textAlign: 'center'}}>Welcome to Application. Please login to continue</h1>
-  )
-  ;
+  ) : (
+    <h1 style={{ textAlign: "center" }}>
+      Welcome to Application. Please login to continue
+    </h1>
+  );
 };

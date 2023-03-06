@@ -5,7 +5,6 @@ export const fetchReminds = createAsyncThunk(
   "remind/fetchAllReminds",
   async (params) => {
     const { listParam, cursor, limit, start, end } = params;
-
     const { data } = await axios.get(
       listParam === "completed"
         ? `/${listParam}?limit=${limit}&cursor=${cursor}&start=${start}&end=${end}`
@@ -14,7 +13,6 @@ export const fetchReminds = createAsyncThunk(
         withCredentials: true,
       }
     );
-
     return data;
   }
 );
@@ -22,19 +20,22 @@ export const fetchReminds = createAsyncThunk(
 export const createRemind = createAsyncThunk(
   "remind/createRemind",
   async (remind) => {
-    const { data } = axios
-      .post(`/remind`, remind, { withCredentials: true })
-      .then((res) => {
-        console.log("res in slice: ", res);
-      });
-    return data;
+    try {
+      axios.post(`/remind`, remind, { withCredentials: true });
+    } catch (error) {
+      console.log(error);
+    }
   }
 );
 
 export const removeRemind = createAsyncThunk(
   "remind/removeRemind",
   async (id) => {
-    axios.delete(`/remind/${id}`, { withCredentials: true });
+    try {
+      axios.delete(`/remind/${id}`, { withCredentials: true });
+    } catch (error) {
+      console.log(error);
+    }
   }
 );
 
@@ -50,8 +51,20 @@ export const updateRemind = createAsyncThunk(
 
 export const upateRemindStatus = createAsyncThunk(
   "remind/udateRemindStatus",
-  async (id, status) => {
-    axios.put(`/remind/${id}`, status, { withCredentials: true });
+  async (params) => {
+    try {
+      const { id, status } = params;
+      console.log("id: ", id, "Status: ", status);
+      axios.put(
+        `/status/${id}`,
+        { completed: status },
+        { withCredentials: true }
+      );
+      return params;
+    } catch (error) {
+      console.log(error);
+      return error;
+    }
   }
 );
 
@@ -64,6 +77,8 @@ const initialState = {
       limit: 5,
     },
   },
+  noMoreReminds: true,
+  filter: "all",
   status: "loading",
   error: null,
 };
@@ -71,7 +86,12 @@ const initialState = {
 const remindSlice = createSlice({
   name: "remind",
   initialState,
-  reducers: {},
+  reducers: {
+    updateFilter(state, action) {
+      state.filter = action.payload;
+      state.items = [];
+    },
+  },
   extraReducers: {
     //getting reminds
     [fetchReminds.pending]: (state) => {
@@ -83,6 +103,11 @@ const remindSlice = createSlice({
       state.pageInfo.nextCursor = action.payload.pageInfo.nextCursor;
       state.pageInfo.page.cursor = action.payload.pageInfo.page.cursor;
       state.pageInfo.page.limit = action.payload.pageInfo.page.limit;
+      state.noMoreReminds =
+        action.payload.pageInfo.nextCursor == 1 ||
+        action.payload.pageInfo.nextCursor == 0
+          ? true
+          : false;
     },
     [fetchReminds.rejected]: (state, action) => {
       state.status = "error";
@@ -102,10 +127,8 @@ const remindSlice = createSlice({
     },
     //delete remind
     [removeRemind.fulfilled]: (state, action) => {
-      const todoID = action.payload;
-      state.items = state.items.filter(
-        (el) => el.id !== todoID
-      );
+      const todoID = action.meta.arg;
+      state.items = state.items.filter((el) => el.id !== todoID);
     },
     //update remind
     [updateRemind.fulfilled]: (state, action) => {
@@ -117,15 +140,21 @@ const remindSlice = createSlice({
         remind.deadline_at = deadline_at;
       }
     },
-    // update status
-    [updateRemind.fulfilled]: (state, action) => {
-      const { id, completed } = action.payload;
+    // update remind status by id
+    [upateRemindStatus.fulfilled]: (state, action) => {
+      const { id, status } = action.payload;
       const remind = state.items.find((remind) => remind.id === id);
       if (remind) {
-        remind.completed = completed;
+        remind.completed = status;
       }
+    },
+    [upateRemindStatus.rejected]: (state, action) => {
+      state.status = "error";
+      state.error = action.error.message;
     },
   },
 });
+
+export const { updateFilter } = remindSlice.actions;
 
 export const remindReducer = remindSlice.reducer;
