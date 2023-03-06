@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { motion } from "framer-motion";
 import { getClasses } from "../utils/getClasses";
 import styles from "../styles/modules/remindItem.module.scss";
@@ -9,8 +9,12 @@ import toast from "react-hot-toast";
 import * as moment from "moment";
 
 // redux
-import { useSelector, useDispatch } from "react-redux";
-import { removeRemind, upateRemindStatus } from "../store/slices/remindSlice";
+import { useDispatch } from "react-redux";
+import {
+  removeRemind,
+  updateRemind,
+  upateRemindStatus,
+} from "../store/slices/remindSlice";
 
 const child = {
   hidden: { y: 20, opacity: 0 },
@@ -20,7 +24,7 @@ const child = {
   },
 };
 
-function RemindItem({ remind, onUpdateRemind }) {
+function RemindItem({ remind }) {
   const [checked, setChecked] = useState(false);
   const [updateModalOpen, setUpdateModalOpen] = useState(false);
 
@@ -47,6 +51,19 @@ function RemindItem({ remind, onUpdateRemind }) {
   const handleUpdate = () => {
     setUpdateModalOpen(true);
   };
+
+  const onUpdateRemind = useCallback(
+    (data) => {
+      try {
+        dispatch(updateRemind(data));
+        toast.success("Remind Updated Successfully");
+      } catch (error) {
+        toast.error("Failed To Update Remind");
+        console.log(error);
+      }
+    },
+    [dispatch]
+  );
 
   const handleCheck = () => {
     dispatch(upateRemindStatus({ id: remind.id, status: !checked }));

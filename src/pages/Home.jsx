@@ -36,23 +36,8 @@ export const Home = ({
   const isAuth = useSelector((state) => Boolean(state.auth.isAuth))
   return  isAuth ? (
     <>
-      <ContentHeader
-        // onCreate={createRemind}
-        onGetAll={getAllReminds}
-        onGetCompleted={getCompletedReminds}
-        onGetCurrent={getCurrentReminds}
-        onSort={onSortReminds}
-      />
-      <AppContent
-        // reminds={reminds}
-        onUpdateRemind={updateRemind}
-        // onDeleteRemind={deleteRemind}
-        onGetAll={getAllReminds}
-        onGetCompleted={getCompletedReminds}
-        onGetCurrent={getCurrentReminds}
-        noMoreReminds={noMoreReminds}
-        cursor={cursor}
-      />
+      <ContentHeader />
+      <AppContent />
     </>
   ) : (
     <h1 style={{ textAlign: "center" }}>

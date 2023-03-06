@@ -75,10 +75,8 @@ function RemindModal({
           remind.deadline_at !== deadline_at
         ) {
           onUpdate({
-            ...remind,
-            description,
-            completed: completed === "true" ? true : false,
-            deadline_at,
+            id: remind.id,
+            remind: { ...remind, description, deadline_at },
           });
         } else {
           return;

@@ -4,16 +4,20 @@ import axios from "../../utils/axios.js";
 export const fetchReminds = createAsyncThunk(
   "remind/fetchAllReminds",
   async (params) => {
-    const { listParam, cursor, limit, start, end } = params;
-    const { data } = await axios.get(
-      listParam === "completed"
-        ? `/${listParam}?limit=${limit}&cursor=${cursor}&start=${start}&end=${end}`
-        : `/${listParam}?limit=${limit}&cursor=${cursor}`,
-      {
-        withCredentials: true,
-      }
-    );
-    return data;
+    try {
+      const { listParam, cursor, limit, start, end } = params;
+      const { data } = await axios.get(
+        listParam === "completed"
+          ? `/${listParam}?limit=${limit}&cursor=${cursor}&start=${start}&end=${end}`
+          : `/${listParam}?limit=${limit}&cursor=${cursor}`,
+        {
+          withCredentials: true,
+        }
+      );
+      return data;
+    } catch (error) {
+      console.log(error);
+    }
   }
 );
 
@@ -41,11 +45,11 @@ export const removeRemind = createAsyncThunk(
 
 export const updateRemind = createAsyncThunk(
   "remind/udateRemind",
-  async (id, remind) => {
-    const { data } = axios.put(`/remind/${id}`, remind, {
+  async (params) => {
+    const { id, remind } = params;
+    await axios.put(`/remind/${id}`, remind, {
       withCredentials: true,
     });
-    return data;
   }
 );
 
@@ -54,7 +58,6 @@ export const upateRemindStatus = createAsyncThunk(
   async (params) => {
     try {
       const { id, status } = params;
-      console.log("id: ", id, "Status: ", status);
       axios.put(
         `/status/${id}`,
         { completed: status },
@@ -77,6 +80,7 @@ const initialState = {
       limit: 5,
     },
   },
+  timeRange: [new Date().getTime(), new Date().getTime()],
   noMoreReminds: true,
   filter: "all",
   status: "loading",
@@ -90,6 +94,9 @@ const remindSlice = createSlice({
     updateFilter(state, action) {
       state.filter = action.payload;
       state.items = [];
+    },
+    updateTimeRange(state, action) {
+      state.timeRange = [...action.payload];
     },
   },
   extraReducers: {
@@ -132,12 +139,13 @@ const remindSlice = createSlice({
     },
     //update remind
     [updateRemind.fulfilled]: (state, action) => {
-      const { id, description, completed, deadline_at } = action.payload;
+      const { id, description, completed, deadline_at } =
+        action.meta.arg.remind;
       const remind = state.items.find((remind) => remind.id === id);
       if (remind) {
         remind.description = description;
-        remind.completed = completed;
-        remind.deadline_at = deadline_at;
+        remind.completed = completed?.getTime?.();
+        remind.deadline_at = deadline_at.getTime();
       }
     },
     // update remind status by id
@@ -148,13 +156,9 @@ const remindSlice = createSlice({
         remind.completed = status;
       }
     },
-    [upateRemindStatus.rejected]: (state, action) => {
-      state.status = "error";
-      state.error = action.error.message;
-    },
   },
 });
 
-export const { updateFilter } = remindSlice.actions;
+export const { updateFilter, updateTimeRange } = remindSlice.actions;
 
 export const remindReducer = remindSlice.reducer;

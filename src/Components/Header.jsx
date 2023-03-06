@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import styles from "../styles/modules/header.module.scss";
-import { useDispatch, useSelector } from "react-redux";
 import UserBar from "./UserBar";
+
+//  redux
+import { useDispatch, useSelector } from "react-redux";
 import { fetchLogout } from "../store/slices/authSlice";
 
 export const Header = () => {
