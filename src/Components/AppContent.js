@@ -1,6 +1,8 @@
 import React, { useState, useContext, useEffect, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { AnimatePresence, motion } from "framer-motion";
+import moment from "moment";
+
 import RemindItem from "./RemindItem";
 import styles from "../styles/modules/app.module.scss";
 import Button from "./Button";
@@ -27,58 +29,63 @@ const child = {
   },
 };
 
-function AppContent({
-  reminds,
-  noMoreReminds,
-  onUpdateRemind,
-  onDeleteRemind,
-  onGetAll,
-  onGetCompleted,
-  onGetCurrent,
-  cursor,
-}) {
+function AppContent({ onUpdateRemind }) {
   const [context, setContext] = useContext(Context);
 
   const dispatch = useDispatch();
 
+  const reminds = useSelector((state) => state.reminds.items);
+  const { noMoreReminds } = useSelector((state) => state.reminds);
   const { nextCursor, page } = useSelector((state) => state.reminds.pageInfo);
-  console.log("nextCursor, page: ", nextCursor, page);
 
-  useEffect(() => {
-    dispatch(
-      fetchReminds({
-        listParam: "remind",
-        cursor: nextCursor,
-        limit: page.limit,
-      })
-    );
-  }, []);
+  // useEffect(() => {
+  //   dispatch(
+  //     fetchReminds({
+  //       listParam: "remind",
+  //       cursor: nextCursor,
+  //       limit: page.limit,
+  //     })
+  //   );
+  // }, []);
 
   const onLoadMoreButton = useCallback(
     (type) => {
       switch (type) {
         case "all":
-          onGetAll(cursor);
           dispatch(
             fetchReminds({
-              listParam: reminds,
+              listParam: "remind",
               cursor: nextCursor,
               limit: page.limit,
             })
           );
           break;
         case "completed":
-          onGetCompleted(cursor, context.timeRange);
+          dispatch(
+            fetchReminds({
+              listParam: "completed",
+              cursor: nextCursor,
+              limit: page.limit,
+              start: moment(context.timeRange[0]).format("YYYY-MM-DDTHH:MM:SS"),
+              end: moment(context.timeRange[1]).format("YYYY-MM-DDTHH:MM:SS"),
+            })
+          );
           break;
         case "current":
-          onGetCurrent(cursor);
+          dispatch(
+            fetchReminds({
+              listParam: "current",
+              cursor: nextCursor,
+              limit: page.limit,
+            })
+          );
           break;
 
         default:
           break;
       }
     },
-    [cursor]
+    [nextCursor]
   );
 
   return (
@@ -96,7 +103,6 @@ function AppContent({
                 remind={remind}
                 key={remind.id ? remind.id : Math.random()}
                 onUpdateRemind={onUpdateRemind}
-                onDeleteRemind={onDeleteRemind}
               />
             ))}
 

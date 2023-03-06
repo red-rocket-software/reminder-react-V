@@ -8,6 +8,10 @@ import RemindModal from "./RemindModal";
 import toast from "react-hot-toast";
 import * as moment from "moment";
 
+// redux
+import { useSelector, useDispatch } from "react-redux";
+import { removeRemind, upateRemindStatus } from "../store/slices/remindSlice";
+
 const child = {
   hidden: { y: 20, opacity: 0 },
   visible: {
@@ -16,9 +20,11 @@ const child = {
   },
 };
 
-function RemindItem({ remind, onUpdateRemind, onDeleteRemind }) {
+function RemindItem({ remind, onUpdateRemind }) {
   const [checked, setChecked] = useState(false);
   const [updateModalOpen, setUpdateModalOpen] = useState(false);
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (remind.completed === "true" || remind.completed === true) {
@@ -28,9 +34,14 @@ function RemindItem({ remind, onUpdateRemind, onDeleteRemind }) {
     }
   }, [remind]);
 
-  const handleDelete = () => {
-    onDeleteRemind(remind.id);
-    toast.success("Todo Delete Successfully");
+  const handleDelete = async () => {
+    try {
+      await dispatch(removeRemind(remind.id));
+      toast.success("Todo Delete Successfully");
+    } catch (error) {
+      toast.error("Something went wrong");
+      console.log(error);
+    }
   };
 
   const handleUpdate = () => {
@@ -38,12 +49,7 @@ function RemindItem({ remind, onUpdateRemind, onDeleteRemind }) {
   };
 
   const handleCheck = () => {
-    setChecked(!checked);
-
-    onUpdateRemind({
-      ...remind,
-      completed: !checked,
-    });
+    dispatch(upateRemindStatus({ id: remind.id, status: !checked }));
   };
 
   return (
