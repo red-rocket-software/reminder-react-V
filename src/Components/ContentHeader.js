@@ -1,5 +1,5 @@
 /* eslint-disable no-fallthrough */
-import React, { useEffect, useState, useContext, useCallback } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import styles from "../styles/modules/app.module.scss";
 import Button, { SelectButton } from "./Button";
 import RemindModal from "./RemindModal";
@@ -7,29 +7,24 @@ import DateTimeRangePicker from "@wojtekmaj/react-datetimerange-picker";
 import moment from "moment";
 import toast from "react-hot-toast";
 
+//  redux
 import { useSelector, useDispatch } from "react-redux";
 import {
   createRemind,
   fetchReminds,
   updateFilter,
+  updateTimeRange,
 } from "../store/slices/remindSlice";
 
-import Context from "../utils/context";
-
 function ContentHeader({
-  // onCreate,
-  // onGetAll,
-  onGetCompleted,
-  onGetCurrent,
   onSort,
 }) {
-  const [context, setContext] = useContext(Context);
   const [modalOpen, setModalOpen] = useState(false);
 
   const dispatch = useDispatch();
 
   const { page } = useSelector((state) => state.reminds.pageInfo);
-  const { filter } = useSelector((state) => state.reminds);
+  const { filter, timeRange } = useSelector((state) => state.reminds);
 
   const onCreateRemind = useCallback(
     (data) => {
@@ -53,9 +48,9 @@ function ContentHeader({
 
   const onTimeRange = useCallback(
     (e) => {
-      setContext((prevState) => ({ ...prevState, timeRange: e }));
+      dispatch(updateTimeRange([e[0].getTime(), e[1].getTime()]));
     },
-    [setContext]
+    [dispatch]
   );
 
   useEffect(() => {
@@ -75,8 +70,8 @@ function ContentHeader({
             listParam: "completed",
             cursor: 0,
             limit: page.limit,
-            start: moment(context.timeRange[0]).format("YYYY-MM-DDTHH:MM:SS"),
-            end: moment(context.timeRange[1]).format("YYYY-MM-DDTHH:MM:SS"),
+            start: moment(timeRange[0]).format("YYYY-MM-DDTHH:MM:SS"),
+            end: moment(timeRange[1]).format("YYYY-MM-DDTHH:MM:SS"),
           })
         );
 
@@ -93,7 +88,7 @@ function ContentHeader({
       default:
         break;
     }
-  }, [filter, context.timeRange]);
+  }, [dispatch, filter, page.limit, timeRange]);
 
   return (
     <div className={styles.appHeader}>
@@ -102,16 +97,16 @@ function ContentHeader({
       </Button>
 
       <div className={styles.header_button}>
-        {context.filter === "completed" && (
+        {filter === "completed" && (
           <DateTimeRangePicker
             className={styles.timeRange}
             onChange={onTimeRange}
-            value={context.timeRange}
+            value={[new Date(timeRange[0]), new Date(timeRange[1])]}
             clearIcon={null}
           />
         )}
 
-        {context.filter === "current" && (
+        {filter === "current" && (
           <div>
             <SelectButton
               id="filter"

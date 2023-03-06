@@ -1,14 +1,13 @@
-import React, { useState, useContext, useEffect, useCallback } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import React, { useCallback } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import moment from "moment";
-
 import RemindItem from "./RemindItem";
 import styles from "../styles/modules/app.module.scss";
 import Button from "./Button";
-import { fetchReminds } from "../store/slices/remindSlice";
 
-import Context from "../utils/context";
+//  redux
+import { useSelector, useDispatch } from "react-redux";
+import { fetchReminds } from "../store/slices/remindSlice";
 
 const container = {
   hidden: { opacity: 1 },
@@ -30,23 +29,13 @@ const child = {
 };
 
 function AppContent({ onUpdateRemind }) {
-  const [context, setContext] = useContext(Context);
-
   const dispatch = useDispatch();
 
   const reminds = useSelector((state) => state.reminds.items);
-  const { noMoreReminds } = useSelector((state) => state.reminds);
+  const { noMoreReminds, filter, timeRange } = useSelector(
+    (state) => state.reminds
+  );
   const { nextCursor, page } = useSelector((state) => state.reminds.pageInfo);
-
-  // useEffect(() => {
-  //   dispatch(
-  //     fetchReminds({
-  //       listParam: "remind",
-  //       cursor: nextCursor,
-  //       limit: page.limit,
-  //     })
-  //   );
-  // }, []);
 
   const onLoadMoreButton = useCallback(
     (type) => {
@@ -66,8 +55,8 @@ function AppContent({ onUpdateRemind }) {
               listParam: "completed",
               cursor: nextCursor,
               limit: page.limit,
-              start: moment(context.timeRange[0]).format("YYYY-MM-DDTHH:MM:SS"),
-              end: moment(context.timeRange[1]).format("YYYY-MM-DDTHH:MM:SS"),
+              start: moment(timeRange[0]).format("YYYY-MM-DDTHH:MM:SS"),
+              end: moment(timeRange[1]).format("YYYY-MM-DDTHH:MM:SS"),
             })
           );
           break;
@@ -85,7 +74,7 @@ function AppContent({ onUpdateRemind }) {
           break;
       }
     },
-    [nextCursor]
+    [dispatch, nextCursor, page.limit, timeRange]
   );
 
   return (
@@ -102,7 +91,6 @@ function AppContent({ onUpdateRemind }) {
               <RemindItem
                 remind={remind}
                 key={remind.id ? remind.id : Math.random()}
-                onUpdateRemind={onUpdateRemind}
               />
             ))}
 
@@ -112,7 +100,7 @@ function AppContent({ onUpdateRemind }) {
                 variant="more"
                 type="button"
                 onClick={() => {
-                  onLoadMoreButton(context.filter);
+                  onLoadMoreButton(filter);
                 }}
               >
                 Load more
