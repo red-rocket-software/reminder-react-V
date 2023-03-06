@@ -34,6 +34,7 @@ function App() {
     setReminds([]);
     setCursor(0);
   }, [context.filter]);
+  
 
   // fetch all reminds in first render of app
   useEffect(() => {

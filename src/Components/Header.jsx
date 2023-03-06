@@ -8,7 +8,8 @@ import { fetchLogout } from "../store/slices/authSlice";
 export const Header = () => {
   const isAuth = useSelector((state) => state.auth.isAuth)
   const {user}  = useSelector((state) => state.auth)
-  const firstLeter = isAuth && user.name.split(' ').map((el) => el[0].toUpperCase())
+  //const firstLeter = isAuth && user.name.split(' ').map((el) => el[0].toUpperCase())
+  const firstLeter = "M"
   const dispatch = useDispatch()
 
   function onClickLogout() {
