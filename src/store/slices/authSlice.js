@@ -5,18 +5,18 @@ export const fetchLogin = createAsyncThunk(
   "auth/fetchLogin",
   async (params) => {
     const { data } = await axios.post("/login", params, {
-        withCredentials: true,
+      withCredentials: true,
     });
     return data;
   }
 );
 
-export const fetchAuthMe = createAsyncThunk('/fetchAuthMe', async () => {
-    const { data } = await axios.get('/fetchMe', {
-        withCredentials: true,
-    })
-    return data;
-})
+export const fetchAuthMe = createAsyncThunk("/fetchAuthMe", async () => {
+  const { data } = await axios.get("/fetchMe", {
+    withCredentials: true,
+  });
+  return data;
+});
 
 export const fetchRegister = createAsyncThunk(
   "auth/fetchRegister",
@@ -33,8 +33,8 @@ export const fetchLogout = createAsyncThunk("auth/fetchLogout", async () => {
 });
 
 const initialState = {
-  user: JSON.parse(localStorage.getItem('userInfo')),
-  isAuth: Boolean(localStorage.getItem('userInfo')),
+  user: JSON.parse(localStorage.getItem("userInfo")),
+  isAuth: Boolean(localStorage.getItem("userInfo")),
   status: "loading",
   error: null,
 };
@@ -59,17 +59,18 @@ const authSlice = createSlice({
       state.error = action.error.message;
     },
     [fetchAuthMe.pending]: (state) => {
-        state.user = null;
-        state.status = 'loading';
+      state.user = null;
+      state.status = "loading";
     },
     [fetchAuthMe.fulfilled]: (state, action) => {
-        state.user = action.payload;
-        state.status = 'loaded';
+      state.user = action.payload;
+      state.status = "loaded";
+      state.isAuth = true;
     },
     [fetchAuthMe.rejected]: (state, action) => {
-        state.user = null;
-        state.status = 'error';
-        state.error = action.error.message;
+      state.user = null;
+      state.status = "error";
+      state.error = action.error.message;
     },
     [fetchLogout.fulfilled]: (state) => {
       state.user = null;

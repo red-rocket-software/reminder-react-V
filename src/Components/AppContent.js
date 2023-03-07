@@ -9,6 +9,7 @@ import Button from "./Button";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchReminds } from "../store/slices/remindSlice";
 
+//  inline styles
 const container = {
   hidden: { opacity: 1 },
   visible: {

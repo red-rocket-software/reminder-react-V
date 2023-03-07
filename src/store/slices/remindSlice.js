@@ -100,7 +100,6 @@ const remindSlice = createSlice({
       state.timeRange = [...action.payload];
     },
     sortReminds(state, action) {
-      console.log(action);
       switch (action.payload) {
         case "deadline":
           state.items = [
@@ -122,6 +121,9 @@ const remindSlice = createSlice({
           return;
       }
     },
+    resetItems(state, _) {
+      state.items = [];
+    },
   },
   extraReducers: {
     //getting reminds
@@ -135,8 +137,6 @@ const remindSlice = createSlice({
       state.pageInfo.page.cursor = action.payload.pageInfo.page.cursor;
       state.pageInfo.page.limit = action.payload.pageInfo.page.limit;
       state.noMoreReminds =
-        // action.payload.pageInfo.nextCursor == 1 ||
-        // action.payload.pageInfo.nextCursor == 0
         action.payload.todos.length < action.payload.pageInfo.page.limit
           ? true
           : false;
@@ -147,6 +147,7 @@ const remindSlice = createSlice({
     },
     //create  remind
     [createRemind.fulfilled]: (state, action) => {
+      console.log(action);
       const newRemind = {
         id: action.meta.requestId, //! change remind ID!!!!!
         description: action.meta.arg.description,
@@ -157,10 +158,16 @@ const remindSlice = createSlice({
       };
       state.items.unshift(newRemind);
     },
+    [createRemind.rejected]: (state, action) => {
+      state.error = action.error.message;
+    },
     //delete remind
     [removeRemind.fulfilled]: (state, action) => {
       const todoID = action.meta.arg;
       state.items = state.items.filter((el) => el.id !== todoID);
+    },
+    [removeRemind.rejected]: (state, action) => {
+      state.error = action.error.message;
     },
     //update remind
     [updateRemind.fulfilled]: (state, action) => {
@@ -171,7 +178,10 @@ const remindSlice = createSlice({
         remind.description = description;
         remind.completed = completed?.getTime?.();
         remind.deadline_at = deadline_at.getTime();
-      }
+      } 
+    },
+    [updateRemind.rejected]: (state, action) => {
+      state.error = action.error.message;
     },
     // update remind status by id
     [upateRemindStatus.fulfilled]: (state, action) => {
@@ -181,10 +191,13 @@ const remindSlice = createSlice({
         remind.completed = status;
       }
     },
+        [updateRemind.rejected]: (state, action) => {
+      state.error = action.error.message;
+    },
   },
 });
 
-export const { updateFilter, updateTimeRange, sortReminds } =
+export const { updateFilter, updateTimeRange, sortReminds, resetItems } =
   remindSlice.actions;
 
 export const remindReducer = remindSlice.reducer;

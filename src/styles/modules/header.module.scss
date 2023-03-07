@@ -4,6 +4,23 @@
   height: 6rem;
 }
 
+.golang_img {
+  transition: 0.2s ease;
+
+  &::after {
+    content: "";
+    height: 120px;
+    width: 120px;
+    position: fixed;
+    background-image: url("../../../public/images/pngwing-2.png");
+    bottom: 2vh;
+    right: 1vw;
+    background-size: 120px 120px;
+    background-repeat: no-repeat;
+    transition: 0.2s ease;
+  }
+}
+
 .inner {
   display: flex;
   align-items: center;
@@ -40,19 +57,19 @@
   font-size: 14px;
 }
 
- button {
-    text-transform: uppercase;
-    outline: 0;
-    background: var(--login-btn);
-    border: 0;
-    border-radius: 5px;
-    padding: 15px 30px;
-    color: var(--white);
-    font-size: 14px;
-    -webkit-transition: all 0.3s ease;
-    transition: all 0.3s ease;
-    cursor: pointer;
-  }
+button {
+  text-transform: uppercase;
+  outline: 0;
+  background: var(--login-btn);
+  border: 0;
+  border-radius: 5px;
+  padding: 15px 30px;
+  color: var(--white);
+  font-size: 14px;
+  -webkit-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
 
 .avatar {
   display: flex;

@@ -7,6 +7,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import * as moment from "moment";
 import DateTimePicker from "react-datetime-picker";
 
+//  inline styles
 const dropin = {
   hidden: {
     opacity: 0,

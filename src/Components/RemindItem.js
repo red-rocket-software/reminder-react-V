@@ -16,6 +16,7 @@ import {
   upateRemindStatus,
 } from "../store/slices/remindSlice";
 
+//  inline styles
 const child = {
   hidden: { y: 20, opacity: 0 },
   visible: {

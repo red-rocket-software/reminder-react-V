@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import styles from "../../styles/modules/login.module.scss";
 import { Formik } from "formik";
 import { registrationSchema } from "../../utils/schemas";
@@ -12,17 +12,19 @@ export const Registration = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const handleSubmit = async (values) => {
-    try {
-      const data = await dispatch(fetchRegister(values));
-      console.log(data);
-      navigate("/login");
-      toast.success("Successfully registered");
-    } catch (error) {
-      toast.success("Failed to register");
-    }
-  };
-
+  const handleSubmit = useCallback(
+    async (values) => {
+      try {
+        const data = await dispatch(fetchRegister(values));
+        navigate("/login");
+        toast.success("Successfully registered");
+      } catch (error) {
+        toast.success("Failed to register");
+      }
+    },
+    [dispatch, navigate]
+  );
+  
   return (
     <div className={styles.formWrapper}>
       <Formik

@@ -91,6 +91,7 @@ function ContentHeader() {
           })
         );
 
+      // eslint-disable-next-line no-fallthrough
       default:
         break;
     }
