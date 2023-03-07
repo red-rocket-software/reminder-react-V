@@ -1,6 +1,6 @@
 import React from "react";
 import Oauth from "../../Components/Oauth";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { fetchLogin } from "../../store/slices/authSlice";
 import { Formik } from "formik";
@@ -13,8 +13,6 @@ import { loginSchema } from "../../utils/schemas";
 export const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
-  const isAuth = useSelector((state) => Boolean(state.auth.user));
 
   const handleSubmit = async (values) => {
     try {
@@ -81,6 +79,8 @@ export const Login = () => {
           </div>
         )}
       </Formik>
+      <b>OR USE</b>
+      <Oauth />
     </div>
   );
 };

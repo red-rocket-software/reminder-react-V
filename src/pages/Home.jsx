@@ -3,7 +3,7 @@ import ContentHeader from "../Components/ContentHeader";
 import AppContent from "../Components/AppContent";
 import { useSelector } from "react-redux";
 
-export const Home = ({}) => {
+export const Home = () => {
   const isAuth = useSelector((state) => Boolean(state.auth.isAuth));
   return isAuth ? (
     <>

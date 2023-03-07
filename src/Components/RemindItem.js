@@ -38,7 +38,7 @@ function RemindItem({ remind }) {
     }
   }, [remind]);
 
-  const handleDelete = async () => {
+  const handleDelete = useCallback(async () => {
     try {
       await dispatch(removeRemind(remind.id));
       toast.success("Todo Delete Successfully");
@@ -46,8 +46,8 @@ function RemindItem({ remind }) {
       toast.error("Something went wrong");
       console.log(error);
     }
-  };
-
+  }, [dispatch, remind.id]);
+  
   const handleUpdate = () => {
     setUpdateModalOpen(true);
   };
@@ -65,13 +65,20 @@ function RemindItem({ remind }) {
     [dispatch]
   );
 
-  const handleCheck = () => {
+  const handleCheck = useCallback(() => {
     dispatch(upateRemindStatus({ id: remind.id, status: !checked }));
-  };
+  }, [checked, dispatch, remind.id]);
 
   return (
     <>
-      <motion.div variants={child} className={styles.item}>
+      <motion.div
+        variants={child}
+        className={getClasses([
+          styles.item,
+          new Date(remind.deadline_at) < new Date() && styles.item_failed,
+          checked && styles.item_finished,
+        ])}
+      >
         <div className={styles.todoDetails}>
           <div className={styles.todoDescriptionBox}>
             <CheckButton checked={checked} handleCheck={handleCheck} />

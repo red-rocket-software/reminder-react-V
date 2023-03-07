@@ -28,7 +28,7 @@ const child = {
   },
 };
 
-function AppContent({ onUpdateRemind }) {
+function AppContent() {
   const dispatch = useDispatch();
 
   const reminds = useSelector((state) => state.reminds.items);

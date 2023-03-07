@@ -1,6 +1,5 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
-
 import { Toaster } from "react-hot-toast";
 import PageTitle from "./Components/PageTitle";
 import { Home } from "./pages/Home";
@@ -10,27 +9,6 @@ import { Header } from "./Components/Header";
 import styles from "./styles/modules/app.module.scss";
 
 function App() {
-  // const onSortReminds = (type) => {
-  //   switch (type) {
-  //     case "deadline":
-  //       setReminds(
-  //         reminds
-  //           .slice()
-  //           .sort((a, b) => moment(a.deadline_at).diff(moment(b.deadline_at)))
-  //       );
-  //       break;
-  //     case "created":
-  //       setReminds(
-  //         reminds
-  //           .slice()
-  //           .sort((a, b) => moment(a.created_at).diff(moment(b.created_at)))
-  //       );
-  //       break;
-  //     default:
-  //       return;
-  //   }
-  // };
-
   return (
     <div className={styles.bg_container}>
       <Header />
