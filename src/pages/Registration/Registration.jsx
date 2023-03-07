@@ -3,7 +3,7 @@ import styles from "../../styles/modules/login.module.scss";
 import { Formik } from "formik";
 import { registrationSchema } from "../../utils/schemas";
 import Oauth from "../../Components/Oauth";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { fetchRegister } from "../../store/slices/authSlice";
 import toast from "react-hot-toast";
@@ -16,13 +16,12 @@ export const Registration = () => {
     try {
       const data = await dispatch(fetchRegister(values));
       console.log(data);
-      navigate('/login');
+      navigate("/login");
       toast.success("Successfully registered");
     } catch (error) {
       toast.success("Failed to register");
     }
   };
-
 
   return (
     <div className={styles.formWrapper}>

@@ -1,4 +1,3 @@
-/* eslint-disable no-fallthrough */
 import React, { useEffect, useState, useCallback } from "react";
 import styles from "../styles/modules/app.module.scss";
 import Button, { SelectButton } from "./Button";
@@ -14,11 +13,10 @@ import {
   fetchReminds,
   updateFilter,
   updateTimeRange,
+  sortReminds,
 } from "../store/slices/remindSlice";
 
-function ContentHeader({
-  onSort,
-}) {
+function ContentHeader() {
   const [modalOpen, setModalOpen] = useState(false);
 
   const dispatch = useDispatch();
@@ -49,6 +47,14 @@ function ContentHeader({
   const onTimeRange = useCallback(
     (e) => {
       dispatch(updateTimeRange([e[0].getTime(), e[1].getTime()]));
+    },
+    [dispatch]
+  );
+
+  const onSort = useCallback(
+    (e) => {
+      e.preventDefault();
+      dispatch(sortReminds(e.target.value));
     },
     [dispatch]
   );
@@ -108,12 +114,7 @@ function ContentHeader({
 
         {filter === "current" && (
           <div>
-            <SelectButton
-              id="filter"
-              onChange={(e) => {
-                onSort(e.target.value);
-              }}
-            >
+            <SelectButton id="filter" onChange={onSort}>
               <option value="deadline" key="deadline">
                 Deadline
               </option>

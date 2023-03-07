@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "../../utils/axios.js";
+import moment from "moment";
 
 export const fetchReminds = createAsyncThunk(
   "remind/fetchAllReminds",
@@ -98,6 +99,29 @@ const remindSlice = createSlice({
     updateTimeRange(state, action) {
       state.timeRange = [...action.payload];
     },
+    sortReminds(state, action) {
+      console.log(action);
+      switch (action.payload) {
+        case "deadline":
+          state.items = [
+            ...state.items
+              .slice()
+              .sort((a, b) =>
+                moment(a.deadline_at).diff(moment(b.deadline_at))
+              ),
+          ];
+          break;
+        case "created":
+          state.items = [
+            ...state.items
+              .slice()
+              .sort((a, b) => moment(a.created_at).diff(moment(b.created_at))),
+          ];
+          break;
+        default:
+          return;
+      }
+    },
   },
   extraReducers: {
     //getting reminds
@@ -111,8 +135,9 @@ const remindSlice = createSlice({
       state.pageInfo.page.cursor = action.payload.pageInfo.page.cursor;
       state.pageInfo.page.limit = action.payload.pageInfo.page.limit;
       state.noMoreReminds =
-        action.payload.pageInfo.nextCursor == 1 ||
-        action.payload.pageInfo.nextCursor == 0
+        // action.payload.pageInfo.nextCursor == 1 ||
+        // action.payload.pageInfo.nextCursor == 0
+        action.payload.todos.length < action.payload.pageInfo.page.limit
           ? true
           : false;
     },
@@ -159,6 +184,7 @@ const remindSlice = createSlice({
   },
 });
 
-export const { updateFilter, updateTimeRange } = remindSlice.actions;
+export const { updateFilter, updateTimeRange, sortReminds } =
+  remindSlice.actions;
 
 export const remindReducer = remindSlice.reducer;

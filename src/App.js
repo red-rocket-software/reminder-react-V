@@ -1,6 +1,5 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
-
 import { Toaster } from "react-hot-toast";
 import PageTitle from "./Components/PageTitle";
 import { Home } from "./pages/Home";
@@ -10,6 +9,7 @@ import { Header } from "./Components/Header";
 import styles from "./styles/modules/app.module.scss";
 
 function App() {
+<<<<<<< HEAD
 <<<<<<< HEAD
   const [reminds, setReminds] = useState([]);
   const [cursor, setCursor] = useState(0);
@@ -81,6 +81,8 @@ function App() {
   //   }
   // };
 
+=======
+>>>>>>> 10d2abd (finished with implementation)
   return (
     <div className={styles.bg_container}>
       <Header />
