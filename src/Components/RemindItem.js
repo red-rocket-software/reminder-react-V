@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { motion } from "framer-motion";
 import { getClasses } from "../utils/getClasses";
 import styles from "../styles/modules/remindItem.module.scss";
@@ -8,6 +8,15 @@ import RemindModal from "./RemindModal";
 import toast from "react-hot-toast";
 import * as moment from "moment";
 
+// redux
+import { useDispatch } from "react-redux";
+import {
+  removeRemind,
+  updateRemind,
+  upateRemindStatus,
+} from "../store/slices/remindSlice";
+
+//  inline styles
 const child = {
   hidden: { y: 20, opacity: 0 },
   visible: {
@@ -16,9 +25,11 @@ const child = {
   },
 };
 
-function RemindItem({ remind, onUpdateRemind, onDeleteRemind }) {
+function RemindItem({ remind }) {
   const [checked, setChecked] = useState(false);
   const [updateModalOpen, setUpdateModalOpen] = useState(false);
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (remind.completed === "true" || remind.completed === true) {
@@ -28,27 +39,47 @@ function RemindItem({ remind, onUpdateRemind, onDeleteRemind }) {
     }
   }, [remind]);
 
-  const handleDelete = () => {
-    onDeleteRemind(remind.id);
-    toast.success("Todo Delete Successfully");
-  };
-
+  const handleDelete = useCallback(async () => {
+    try {
+      await dispatch(removeRemind(remind.id));
+      toast.success("Todo Delete Successfully");
+    } catch (error) {
+      toast.error("Something went wrong");
+      console.log(error);
+    }
+  }, [dispatch, remind.id]);
+  
   const handleUpdate = () => {
     setUpdateModalOpen(true);
   };
 
-  const handleCheck = () => {
-    setChecked(!checked);
+  const onUpdateRemind = useCallback(
+    (data) => {
+      try {
+        dispatch(updateRemind(data));
+        toast.success("Remind Updated Successfully");
+      } catch (error) {
+        toast.error("Failed To Update Remind");
+        console.log(error);
+      }
+    },
+    [dispatch]
+  );
 
-    onUpdateRemind({
-      ...remind,
-      completed: !checked,
-    });
-  };
+  const handleCheck = useCallback(() => {
+    dispatch(upateRemindStatus({ id: remind.id, status: !checked }));
+  }, [checked, dispatch, remind.id]);
 
   return (
     <>
-      <motion.div variants={child} className={styles.item}>
+      <motion.div
+        variants={child}
+        className={getClasses([
+          styles.item,
+          new Date(remind.deadline_at) < new Date() && styles.item_failed,
+          checked && styles.item_finished,
+        ])}
+      >
         <div className={styles.todoDetails}>
           <div className={styles.todoDescriptionBox}>
             <CheckButton checked={checked} handleCheck={handleCheck} />

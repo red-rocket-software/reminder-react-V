@@ -2,6 +2,7 @@ import React from "react";
 import styles from "../styles/modules/remindItem.module.scss";
 import { motion, useMotionValue, useTransform } from "framer-motion";
 
+//  inline styles
 const checkVariant = {
   initial: {
     color: "#fff",

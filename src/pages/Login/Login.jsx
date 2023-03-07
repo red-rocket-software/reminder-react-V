@@ -1,10 +1,10 @@
-import React from "react";
-import Oauth from "../../Components/Oauth";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useCallback } from "react";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { fetchLogin } from "../../store/slices/authSlice";
 import { Formik } from "formik";
 import toast from "react-hot-toast";
+import { fetchLogin } from "../../store/slices/authSlice";
+import Oauth from "../../Components/Oauth";
 
 import styles from "../../styles/modules/login.module.scss";
 
@@ -14,21 +14,24 @@ export const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-
-
-  const isAuth = useSelector((state) => Boolean(state.auth.user));
-
-  const handleSubmit = async (values) => {
-    try {
-      const data = await dispatch(fetchLogin(values));
-      const userData = {name: data.payload.name, email: data.payload.email, avatarURL: data.payload.photo}
-      localStorage.setItem('userInfo', JSON.stringify(userData))
-      toast.success("Logged in Successfully"); 
-      navigate('/')
-    } catch (error) {
-      toast.success("Failed to login");
-    }
-  };
+  const handleSubmit = useCallback(
+    async (values) => {
+      try {
+        const data = await dispatch(fetchLogin(values));
+        const userData = {
+          name: data.payload.name,
+          email: data.payload.email,
+          avatarURL: data.payload.photo,
+        };
+        localStorage.setItem("userInfo", JSON.stringify(userData));
+        toast.success("Logged in Successfully");
+        navigate("/");
+      } catch (error) {
+        toast.success("Failed to login");
+      }
+    },
+    [dispatch, navigate]
+  );
 
   return (
     <div className={styles.formWrapper}>

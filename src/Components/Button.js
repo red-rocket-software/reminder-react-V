@@ -2,6 +2,7 @@ import React from "react";
 import styles from "../styles/modules/button.module.scss";
 import { getClasses } from "../utils/getClasses";
 
+//  inline styles
 const buttonTypes = {
   primary: "primary",
   secondary: "secondary",

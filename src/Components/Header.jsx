@@ -1,26 +1,34 @@
-import React, { useState } from "react";
+import React, { useCallback } from "react";
 import { Link } from "react-router-dom";
 import styles from "../styles/modules/header.module.scss";
-import { useDispatch, useSelector } from "react-redux";
 import UserBar from "./UserBar";
+
+import { getClasses } from "../utils/getClasses";
+
+//  redux
+import { useDispatch, useSelector } from "react-redux";
 import { fetchLogout } from "../store/slices/authSlice";
+import { resetItems } from "../store/slices/remindSlice";
 
 export const Header = () => {
-  const isAuth = useSelector((state) => state.auth.isAuth)
-  const {user}  = useSelector((state) => state.auth)
-  //const firstLeter = isAuth && user.name.split(' ').map((el) => el[0].toUpperCase())
-  const firstLeter = "M"
-  const dispatch = useDispatch()
+  const { user, isAuth } = useSelector((state) => state.auth);
 
-  function onClickLogout() {
-    if (window.confirm('Are you sure you want to log out')) {
-      dispatch(fetchLogout())
-      window.localStorage.removeItem('userInfo')
+  const firstLeter =
+    isAuth && user?.name.split(" ").map((el) => el[0].toUpperCase());
+  const dispatch = useDispatch();
+
+  const onClickLogout = useCallback(() => {
+    if (window.confirm("Are you sure you want to log out")) {
+      dispatch(fetchLogout());
+      dispatch(resetItems());
+      localStorage.removeItem("userInfo");
     }
-  };
+  }, [dispatch]);
 
   return (
-    <div className={styles.container}>
+    <div
+      className={getClasses([styles.container, isAuth && styles.golang_img])}
+    >
       <div className={styles.inner}>
         <Link to="/" className={styles.logo}>
           R
@@ -28,8 +36,10 @@ export const Header = () => {
         <div className={styles.buttons}>
           {isAuth ? (
             <>
-             <UserBar {...user} firstLeter = {firstLeter}/>
-             <button type="submit" onClick={onClickLogout}>Log out</button>
+              <UserBar {...user} firstLeter={firstLeter} />
+              <button type="submit" onClick={onClickLogout}>
+                Log out
+              </button>
             </>
           ) : (
             <div className={styles.auth}>

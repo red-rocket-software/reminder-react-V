@@ -1,11 +1,15 @@
-import React, { useCallback, useContext } from "react";
+import React, { useCallback } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import moment from "moment";
 import RemindItem from "./RemindItem";
 import styles from "../styles/modules/app.module.scss";
 import Button from "./Button";
 
-import Context from "../utils/context";
+//  redux
+import { useSelector, useDispatch } from "react-redux";
+import { fetchReminds } from "../store/slices/remindSlice";
 
+//  inline styles
 const container = {
   hidden: { opacity: 1 },
   visible: {
@@ -25,36 +29,53 @@ const child = {
   },
 };
 
-function AppContent({
-  reminds,
-  noMoreReminds,
-  onUpdateRemind,
-  onDeleteRemind,
-  onGetAll,
-  onGetCompleted,
-  onGetCurrent,
-  cursor,
-}) {
-  const [context, setContext] = useContext(Context);
+function AppContent() {
+  const dispatch = useDispatch();
+
+  const reminds = useSelector((state) => state.reminds.items);
+  const { noMoreReminds, filter, timeRange } = useSelector(
+    (state) => state.reminds
+  );
+  const { nextCursor, page } = useSelector((state) => state.reminds.pageInfo);
 
   const onLoadMoreButton = useCallback(
     (type) => {
       switch (type) {
         case "all":
-          onGetAll(cursor);
+          dispatch(
+            fetchReminds({
+              listParam: "remind",
+              cursor: nextCursor,
+              limit: page.limit,
+            })
+          );
           break;
         case "completed":
-          onGetCompleted(cursor, context.timeRange);
+          dispatch(
+            fetchReminds({
+              listParam: "completed",
+              cursor: nextCursor,
+              limit: page.limit,
+              start: moment(timeRange[0]).format("YYYY-MM-DDTHH:MM:SS"),
+              end: moment(timeRange[1]).format("YYYY-MM-DDTHH:MM:SS"),
+            })
+          );
           break;
         case "current":
-          onGetCurrent(cursor);
+          dispatch(
+            fetchReminds({
+              listParam: "current",
+              cursor: nextCursor,
+              limit: page.limit,
+            })
+          );
           break;
 
         default:
           break;
       }
     },
-    [cursor]
+    [dispatch, nextCursor, page.limit, timeRange]
   );
 
   return (
@@ -71,8 +92,6 @@ function AppContent({
               <RemindItem
                 remind={remind}
                 key={remind.id ? remind.id : Math.random()}
-                onUpdateRemind={onUpdateRemind}
-                onDeleteRemind={onDeleteRemind}
               />
             ))}
 
@@ -82,7 +101,7 @@ function AppContent({
                 variant="more"
                 type="button"
                 onClick={() => {
-                  onLoadMoreButton(context.filter);
+                  onLoadMoreButton(filter);
                 }}
               >
                 Load more

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import styles from "../styles/modules/modal.module.scss";
 import { MdOutlineClose } from "react-icons/md";
 import Button from "./Button";
@@ -7,6 +7,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import * as moment from "moment";
 import DateTimePicker from "react-datetime-picker";
 
+//  inline styles
 const dropin = {
   hidden: {
     opacity: 0,
@@ -51,43 +52,53 @@ function RemindModal({
     }
   }, [modalOpen, remind, type]);
 
-  const handleSumbit = (e) => {
-    e.preventDefault();
-    if (description === "") {
-      toast.error("Please enter a title.");
-      return;
-    }
+  const handleSumbit = useCallback(
+    (e) => {
+      e.preventDefault();
+      if (description === "") {
+        toast.error("Please enter a title.");
+        return;
+      }
 
-    if (description && deadline_at) {
-      if (type === "add") {
-        onCreate({
-          description: description,
-          created_at: moment(new Date()).format("DD.MM.YYYY, hh:mm:ss"),
-          deadline_at: moment(deadline_at).format("YYYY-MM-DDThh:mm"),
-        });
-        setDeadline_at(new Date());
+      if (description && deadline_at) {
+        if (type === "add") {
+          onCreate({
+            description: description,
+            created_at: moment(new Date()).format("DD.MM.YYYY, hh:mm:ss"),
+            deadline_at: moment(deadline_at).format("YYYY-MM-DDThh:mm"),
+          });
+          setDeadline_at(new Date());
+          setModalOpen(false);
+        }
+        if (type === "update") {
+          if (
+            remind.description !== description ||
+            remind.completed !== completed ||
+            remind.deadline_at !== deadline_at
+          ) {
+            onUpdate({
+              id: remind.id,
+              remind: { ...remind, description, deadline_at },
+            });
+          } else {
+            return;
+          }
+        }
         setModalOpen(false);
       }
-      if (type === "update") {
-        if (
-          remind.description !== description ||
-          remind.completed !== completed ||
-          remind.deadline_at !== deadline_at
-        ) {
-          onUpdate({
-            ...remind,
-            description,
-            completed: completed === "true" ? true : false,
-            deadline_at,
-          });
-        } else {
-          return;
-        }
-      }
-      setModalOpen(false);
-    }
-  };
-
+    },
+    [
+      completed,
+      deadline_at,
+      description,
+      onCreate,
+      onUpdate,
+      remind,
+      setModalOpen,
+      type,
+    ]
+  );
+  
   return (
     <AnimatePresence>
       {modalOpen && (

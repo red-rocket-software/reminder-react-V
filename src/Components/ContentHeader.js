@@ -1,57 +1,101 @@
-/* eslint-disable no-fallthrough */
-import React, { useEffect, useState, useContext, useCallback } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import styles from "../styles/modules/app.module.scss";
 import Button, { SelectButton } from "./Button";
 import RemindModal from "./RemindModal";
 import DateTimeRangePicker from "@wojtekmaj/react-datetimerange-picker";
 import moment from "moment";
+import toast from "react-hot-toast";
 
-import Context from "../utils/context";
+//  redux
+import { useSelector, useDispatch } from "react-redux";
+import {
+  createRemind,
+  fetchReminds,
+  updateFilter,
+  updateTimeRange,
+  sortReminds,
+} from "../store/slices/remindSlice";
 
-function ContentHeader({
-  onCreate,
-  onGetAll,
-  onGetCompleted,
-  onGetCurrent,
-  onSort,
-}) {
-  const [context, setContext] = useContext(Context);
+function ContentHeader() {
   const [modalOpen, setModalOpen] = useState(false);
+
+  const dispatch = useDispatch();
+
+  const { page } = useSelector((state) => state.reminds.pageInfo);
+  const { filter, timeRange } = useSelector((state) => state.reminds);
+
+  const onCreateRemind = useCallback(
+    (data) => {
+      try {
+        dispatch(createRemind(data));
+        toast.success("Remind Added Successfully");
+      } catch (error) {
+        toast.error("Failed To Add Remind");
+        console.log(error);
+      }
+    },
+    [dispatch]
+  );
 
   const updatedFilter = useCallback(
     (e) => {
-      e.preventDefault();
-      setContext((prevState) => ({ ...prevState, filter: e.target.value }));
+      dispatch(updateFilter(e.target.value));
     },
-    [setContext]
+    [dispatch]
   );
 
   const onTimeRange = useCallback(
     (e) => {
-      setContext((prevState) => ({ ...prevState, timeRange: e }));
+      dispatch(updateTimeRange([e[0].getTime(), e[1].getTime()]));
     },
-    [setContext]
+    [dispatch]
+  );
+
+  const onSort = useCallback(
+    (e) => {
+      e.preventDefault();
+      dispatch(sortReminds(e.target.value));
+    },
+    [dispatch]
   );
 
   useEffect(() => {
-    switch (context.filter) {
+    switch (filter) {
       case "all":
-        onGetAll(0);
+        dispatch(
+          fetchReminds({
+            listParam: "remind",
+            cursor: 0,
+            limit: page.limit,
+          })
+        );
         break;
       case "completed":
-        onGetCompleted(0, [
-          moment(context.timeRange[0]).format("YYYY-MM-DDThh:mm"),
-          moment(context.timeRange[1]).format("YYYY-MM-DDThh:mm"),
-        ]);
+        dispatch(
+          fetchReminds({
+            listParam: "completed",
+            cursor: 0,
+            limit: page.limit,
+            start: moment(timeRange[0]).format("YYYY-MM-DDTHH:MM:SS"),
+            end: moment(timeRange[1]).format("YYYY-MM-DDTHH:MM:SS"),
+          })
+        );
 
         break;
       case "current":
-        onGetCurrent(0);
+        dispatch(
+          fetchReminds({
+            listParam: "current",
+            cursor: 0,
+            limit: page.limit,
+          })
+        );
 
+      // eslint-disable-next-line no-fallthrough
       default:
         break;
     }
-  }, [context.filter, context.timeRange]);
+  }, [dispatch, filter, page.limit, timeRange]);
 
   return (
     <div className={styles.appHeader}>
@@ -60,23 +104,18 @@ function ContentHeader({
       </Button>
 
       <div className={styles.header_button}>
-        {context.filter === "completed" && (
+        {filter === "completed" && (
           <DateTimeRangePicker
             className={styles.timeRange}
             onChange={onTimeRange}
-            value={context.timeRange}
+            value={[new Date(timeRange[0]), new Date(timeRange[1])]}
             clearIcon={null}
           />
         )}
 
-        {context.filter === "current" && (
+        {filter === "current" && (
           <div>
-            <SelectButton
-              id="filter"
-              onChange={(e) => {
-                onSort(e.target.value);
-              }}
-            >
+            <SelectButton id="filter" onChange={onSort}>
               <option value="deadline" key="deadline">
                 Deadline
               </option>
@@ -102,7 +141,7 @@ function ContentHeader({
 
       <RemindModal
         type="add"
-        onCreate={onCreate}
+        onCreate={onCreateRemind}
         modalOpen={modalOpen}
         setModalOpen={setModalOpen}
       />

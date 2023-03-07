@@ -1,7 +1,16 @@
 .bg_container {
-  // background-image: url("https://r4.wallpaperflare.com/wallpaper/319/609/287/graffiti-street-art-colorful-wall-wallpaper-06a83ee7291e6502fd92e823b417431e.jpg");
-
-  background-repeat: space;
+  // position: relative;
+  &::after {
+    content: "";
+    height: 100px;
+    width: 100px;
+    position: fixed;
+    background-image: url("../../../public/images/pngwing.com.png");
+    bottom: 2vh;
+    left: 1vw;
+    background-size: 100px 100px;
+    background-repeat: no-repeat;
+  }
 }
 
 .app__wrapper {
