@@ -15,7 +15,7 @@ export const Registration = () => {
   const handleSubmit = useCallback(
     async (values) => {
       try {
-        const data = await dispatch(fetchRegister(values));
+        dispatch(fetchRegister(values));
         navigate("/login");
         toast.success("Successfully registered");
       } catch (error) {

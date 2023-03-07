@@ -100,6 +100,10 @@ const remindSlice = createSlice({
       state.timeRange = [...action.payload];
     },
     sortReminds(state, action) {
+<<<<<<< HEAD
+=======
+      console.log(action);
+>>>>>>> 10d2abdaf8713d5047dc7c66c4db301bf6fea4e3
       switch (action.payload) {
         case "deadline":
           state.items = [
@@ -121,9 +125,12 @@ const remindSlice = createSlice({
           return;
       }
     },
+<<<<<<< HEAD
     resetItems(state, _) {
       state.items = [];
     },
+=======
+>>>>>>> 10d2abdaf8713d5047dc7c66c4db301bf6fea4e3
   },
   extraReducers: {
     //getting reminds
@@ -137,6 +144,11 @@ const remindSlice = createSlice({
       state.pageInfo.page.cursor = action.payload.pageInfo.page.cursor;
       state.pageInfo.page.limit = action.payload.pageInfo.page.limit;
       state.noMoreReminds =
+<<<<<<< HEAD
+=======
+        // action.payload.pageInfo.nextCursor == 1 ||
+        // action.payload.pageInfo.nextCursor == 0
+>>>>>>> 10d2abdaf8713d5047dc7c66c4db301bf6fea4e3
         action.payload.todos.length < action.payload.pageInfo.page.limit
           ? true
           : false;
@@ -147,7 +159,10 @@ const remindSlice = createSlice({
     },
     //create  remind
     [createRemind.fulfilled]: (state, action) => {
+<<<<<<< HEAD
       console.log(action);
+=======
+>>>>>>> 10d2abdaf8713d5047dc7c66c4db301bf6fea4e3
       const newRemind = {
         id: action.meta.requestId, //! change remind ID!!!!!
         description: action.meta.arg.description,
@@ -158,17 +173,23 @@ const remindSlice = createSlice({
       };
       state.items.unshift(newRemind);
     },
+<<<<<<< HEAD
     [createRemind.rejected]: (state, action) => {
       state.error = action.error.message;
     },
+=======
+>>>>>>> 10d2abdaf8713d5047dc7c66c4db301bf6fea4e3
     //delete remind
     [removeRemind.fulfilled]: (state, action) => {
       const todoID = action.meta.arg;
       state.items = state.items.filter((el) => el.id !== todoID);
     },
+<<<<<<< HEAD
     [removeRemind.rejected]: (state, action) => {
       state.error = action.error.message;
     },
+=======
+>>>>>>> 10d2abdaf8713d5047dc7c66c4db301bf6fea4e3
     //update remind
     [updateRemind.fulfilled]: (state, action) => {
       const { id, description, completed, deadline_at } =
@@ -178,10 +199,14 @@ const remindSlice = createSlice({
         remind.description = description;
         remind.completed = completed?.getTime?.();
         remind.deadline_at = deadline_at.getTime();
+<<<<<<< HEAD
       } 
     },
     [updateRemind.rejected]: (state, action) => {
       state.error = action.error.message;
+=======
+      }
+>>>>>>> 10d2abdaf8713d5047dc7c66c4db301bf6fea4e3
     },
     // update remind status by id
     [upateRemindStatus.fulfilled]: (state, action) => {
@@ -191,6 +216,7 @@ const remindSlice = createSlice({
         remind.completed = status;
       }
     },
+<<<<<<< HEAD
         [updateRemind.rejected]: (state, action) => {
       state.error = action.error.message;
     },
@@ -198,6 +224,12 @@ const remindSlice = createSlice({
 });
 
 export const { updateFilter, updateTimeRange, sortReminds, resetItems } =
+=======
+  },
+});
+
+export const { updateFilter, updateTimeRange, sortReminds } =
+>>>>>>> 10d2abdaf8713d5047dc7c66c4db301bf6fea4e3
   remindSlice.actions;
 
 export const remindReducer = remindSlice.reducer;
