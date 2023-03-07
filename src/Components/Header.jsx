@@ -1,17 +1,10 @@
-<<<<<<< HEAD
 import React, { useCallback } from "react";
-=======
-import React from "react";
->>>>>>> 10d2abdaf8713d5047dc7c66c4db301bf6fea4e3
 import { Link } from "react-router-dom";
 import styles from "../styles/modules/header.module.scss";
 import UserBar from "./UserBar";
 
-<<<<<<< HEAD
 import { getClasses } from "../utils/getClasses";
 
-=======
->>>>>>> 10d2abdaf8713d5047dc7c66c4db301bf6fea4e3
 //  redux
 import { useDispatch, useSelector } from "react-redux";
 import { fetchLogout } from "../store/slices/authSlice";
