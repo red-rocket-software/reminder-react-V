@@ -98,6 +98,7 @@ const remindSlice = createSlice({
     },
     updateTimeRange(state, action) {
       state.timeRange = [...action.payload];
+      state.items = [];
     },
     sortReminds(state, action) {
       switch (action.payload) {
@@ -178,7 +179,7 @@ const remindSlice = createSlice({
         remind.description = description;
         remind.completed = completed?.getTime?.();
         remind.deadline_at = deadline_at.getTime();
-      } 
+      }
     },
     [updateRemind.rejected]: (state, action) => {
       state.error = action.error.message;
@@ -191,7 +192,7 @@ const remindSlice = createSlice({
         remind.completed = status;
       }
     },
-        [updateRemind.rejected]: (state, action) => {
+    [updateRemind.rejected]: (state, action) => {
       state.error = action.error.message;
     },
   },
