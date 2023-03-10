@@ -119,3 +119,20 @@ button {
     }
   }
 }
+
+.configIcon{
+ font-size: 2.5rem;
+ border: 1px solid #0000;
+ cursor: pointer;
+ transition: all 0.3s ease 0s;
+ &:hover{
+  color: var(--gray-1);
+ };
+}
+
+.leftBar{
+  display: flex;
+  column-gap: 10px;
+}
+
+
