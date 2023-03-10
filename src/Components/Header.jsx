@@ -2,6 +2,7 @@ import React, { useCallback } from "react";
 import { Link } from "react-router-dom";
 import styles from "../styles/modules/header.module.scss";
 import UserBar from "./UserBar";
+import {MdOutlineConstruction} from 'react-icons/md'
 
 import { getClasses } from "../utils/getClasses";
 
@@ -9,13 +10,19 @@ import { getClasses } from "../utils/getClasses";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchLogout } from "../store/slices/authSlice";
 import { resetItems } from "../store/slices/remindSlice";
+import ConfigDrawer from "./ConfigDrawer";
 
 export const Header = () => {
+  const [configOpen, setConfigOpen] = React.useState(false);
   const { user, isAuth } = useSelector((state) => state.auth);
 
   const firstLeter =
     isAuth && user?.name.split(" ").map((el) => el[0].toUpperCase());
   const dispatch = useDispatch();
+
+  const onClickCongig = () => {
+    setConfigOpen(!configOpen)
+  }
 
   const onClickLogout = useCallback(() => {
     if (window.confirm("Are you sure you want to log out")) {
@@ -27,12 +34,20 @@ export const Header = () => {
 
   return (
     <div
-      className={getClasses([styles.container, isAuth && styles.golang_img])}
+    className={getClasses([styles.container, isAuth && styles.golang_img])}
     >
+      {configOpen && (
+        <ConfigDrawer setOpen={onClickCongig}/>
+      )}
       <div className={styles.inner}>
-        <Link to="/" className={styles.logo}>
-          R
-        </Link>
+       <div className={styles.leftBar}>
+          <Link to="/" className={styles.logo}>
+            R
+          </Link>
+          {isAuth && (
+            <div className={styles.configIcon} onClick={() => onClickCongig()}> <MdOutlineConstruction /></div>
+          )}
+       </div >
         <div className={styles.buttons}>
           {isAuth ? (
             <>
