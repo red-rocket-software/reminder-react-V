@@ -9,19 +9,19 @@ function ConfigDrawer({ setOpen }) {
   const { user } = useSelector((state) => state.auth);
   const [checkedStatus, setCheckedStatus] = useState(user.notification);
 
-  const handleCheckNotify = useCallback(async () => {
-    try {
-      await axios.put(
-        `/user/${user.id}`,
-        { notification: !checkedStatus },
-        { withCredentials: true }
-      );
-      setCheckedStatus(!checkedStatus);
-    } catch (error) {
-      console.log(error);
-      return error;
-    }
-  }, [checkedStatus, user.id]);
+  // const handleCheckNotify = useCallback(async () => {
+  //   try {
+  //     await axios.put(
+  //       `/user/${user.id}`,
+  //       { notification: !checkedStatus },
+  //       { withCredentials: true }
+  //     );
+  //     setCheckedStatus(!checkedStatus);
+  //   } catch (error) {
+  //     console.log(error);
+  //     return error;
+  //   }
+  // }, [checkedStatus, user.id]);
 
   useEffect(() => {
     const handleKeyDown = (event) => {
@@ -56,6 +56,7 @@ function ConfigDrawer({ setOpen }) {
         </div>
 
         <div className={styles.drawer_content}>
+          <div className={styles.config}>
           <label htmlFor="checkbox" className={styles.customSelect}>
             <p>How many days before the deadline do you want to be notified?</p>
             <SelectButton id="notification" onChange={() => {}}>
@@ -70,6 +71,9 @@ function ConfigDrawer({ setOpen }) {
               </option>
             </SelectButton>
           </label>
+          <Button variant="primary">Accept</Button>
+          </div>
+         
           <div className={styles.danger_zone}>
             <p>DANGER ZONE</p>
             <Button variant="danger_red">Remove my account</Button>

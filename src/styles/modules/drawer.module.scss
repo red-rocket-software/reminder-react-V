@@ -49,6 +49,17 @@
   color: var(--gray-2);
 }
 
+.config {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  button {
+    margin: 0;
+    display: block;
+  }
+}
+
 .close {
   font-size: 3rem;
   position: absolute;
