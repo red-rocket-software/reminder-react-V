@@ -1,6 +1,6 @@
 import React, { useCallback } from "react";
-import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, Navigate } from "react-router-dom";
 import { Formik } from "formik";
 import toast from "react-hot-toast";
 import { fetchLogin } from "../../store/slices/authSlice";
@@ -13,6 +13,8 @@ import { loginSchema } from "../../utils/schemas";
 export const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const isAuth = useSelector((state) => Boolean(state.auth.isAuth));
 
   const handleSubmit = useCallback(
     async (values) => {
@@ -33,57 +35,55 @@ export const Login = () => {
     [dispatch, navigate]
   );
 
-  return (
-    <div className={styles.formWrapper}>
-      <Formik
-        validationSchema={loginSchema}
-        initialValues={{ email: "", password: "" }}
-        onSubmit={handleSubmit}
-      >
-        {({
-          values,
-          errors,
-          touched,
-          handleChange,
-          handleBlur,
-          handleSubmit,
-        }) => (
-          <div>
-            <div className={styles.form}>
-              <form noValidate onSubmit={handleSubmit}>
-                <input
-                  type="email"
-                  name="email"
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  value={values.email}
-                  placeholder="Enter email"
-                  id="email"
-                  autoComplete="off"
-                />
-                <p className={styles.error}>
-                  {errors.email && touched.email && errors.email}
-                </p>
-                <input
-                  type="password"
-                  name="password"
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  value={values.password}
-                  placeholder="Enter password"
-                  autoComplete="off"
-                />
-                <p className={styles.error}>
-                  {errors.password && touched.password && errors.password}
-                </p>
-                <button type="submit">Login</button>
-              </form>
-            </div>
+  return (!isAuth?<div className={styles.formWrapper}>
+    <Formik
+      validationSchema={loginSchema}
+      initialValues={{ email: "", password: "" }}
+      onSubmit={handleSubmit}
+    >
+      {({
+        values,
+        errors,
+        touched,
+        handleChange,
+        handleBlur,
+        handleSubmit,
+      }) => (
+        <div>
+          <div className={styles.form}>
+            <form noValidate onSubmit={handleSubmit}>
+              <input
+                type="email"
+                name="email"
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.email}
+                placeholder="Enter email"
+                id="email"
+                autoComplete="off"
+              />
+              <p className={styles.error}>
+                {errors.email && touched.email && errors.email}
+              </p>
+              <input
+                type="password"
+                name="password"
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.password}
+                placeholder="Enter password"
+                autoComplete="off"
+              />
+              <p className={styles.error}>
+                {errors.password && touched.password && errors.password}
+              </p>
+              <button type="submit">Login</button>
+            </form>
           </div>
-        )}
-      </Formik>
-      <b>OR USE</b>
-      <Oauth />
-    </div>
-  );
+        </div>
+      )}
+    </Formik>
+    <b>OR USE</b>
+    <Oauth />
+  </div>:<Navigate to="/" />);
 };
