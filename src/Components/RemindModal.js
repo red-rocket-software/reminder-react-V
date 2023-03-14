@@ -1,11 +1,13 @@
 import React, { useEffect, useState, useCallback } from "react";
 import styles from "../styles/modules/modal.module.scss";
 import { MdOutlineClose } from "react-icons/md";
+import { GoCheck } from "react-icons/go";
 import Button from "./Button";
 import toast from "react-hot-toast";
 import { AnimatePresence, motion } from "framer-motion";
 import * as moment from "moment";
 import DateTimePicker from "react-datetime-picker";
+import Checkbox from "react-custom-checkbox";
 
 //  inline styles
 const dropin = {
@@ -40,6 +42,7 @@ function RemindModal({
   const [description, setDescription] = useState("");
   const [completed, setCompleted] = useState(false);
   const [deadline_at, setDeadline_at] = useState(new Date());
+  const [isCheckedNotification, setIsCheckedNotification] = useState(false);
 
   useEffect(() => {
     if (type === "update") {
@@ -98,7 +101,7 @@ function RemindModal({
       type,
     ]
   );
-  
+
   return (
     <AnimatePresence>
       {modalOpen && (
@@ -152,6 +155,16 @@ function RemindModal({
                 }}
                 value={deadline_at}
               />
+
+              <label className={styles.checkbox_control}>
+                <input
+                  type="checkbox"
+                  name="checkbox"
+                  checked={isCheckedNotification}
+                  onChange={() => setIsCheckedNotification((prev) => !prev)}
+                />
+                <p>Notify me two hours before the deadline</p>
+              </label>
 
               <div className={styles.buttonContainer}>
                 <Button type="submit" variant="primary">
