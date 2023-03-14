@@ -2,6 +2,7 @@
   background-color: var(--black-2);
   padding: 10px 10px;
   height: 6rem;
+  box-shadow: var(--header);
 }
 
 .golang_img {
@@ -15,6 +16,7 @@
     background-image: url("../../../public/images/pngwing-2.png");
     bottom: 2vh;
     right: 1vw;
+    z-index: 1;
     background-size: 120px 120px;
     background-repeat: no-repeat;
     transition: 0.2s ease;
@@ -43,10 +45,12 @@
   text-decoration: none;
   transition: 0.2s ease;
   cursor: pointer;
+  box-shadow: var(--header-logo);
 
   &:hover {
     background-color: var(--bg-2);
     color: var(--black);
+    box-shadow: var(--header-logo-inner);
   }
 }
 
@@ -120,19 +124,26 @@ button {
   }
 }
 
-.configIcon{
- font-size: 2.5rem;
- border: 1px solid #0000;
- cursor: pointer;
- transition: all 0.3s ease 0s;
- &:hover{
-  color: var(--gray-1);
- };
+.configIcon {
+  font-size: 2.5rem;
+  border: 1px solid #0000;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease 0s;
+  color: var(--white);
+  &:hover {
+    color: var(--primaryGreen);
+    filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.548));
+  }
 }
 
-.leftBar{
+.leftBar {
   display: flex;
+  align-items: center;
+  justify-content: center;
   column-gap: 10px;
 }
-
-

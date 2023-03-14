@@ -3,7 +3,7 @@
   outline: none;
   height: auto;
   padding: 0.8rem 2rem;
-  border: none;
+  // border: 2px solid transparent;
   border-radius: 6px;
   font-weight: 500;
   font-size: 1.6rem;
@@ -36,4 +36,16 @@
   color: var(--black-1);
   margin: 0 auto;
   display: block;
+}
+
+.button--danger_red {
+  background-color: var(--remind-failed);
+  color: var(--black-1);
+  margin: 0 auto;
+  display: block;
+
+  &:hover {
+    color: var(--bg-3);
+    background-color: var(--red);
+  }
 }

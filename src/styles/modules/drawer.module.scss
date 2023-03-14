@@ -1,73 +1,148 @@
 .overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.4);
-    z-index: 1;
-  }
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+  z-index: 2;
+}
 
-  .drawer {
-    position: absolute;
-    width: 420px;
-    height: 100%;
-    right: 0px;
-    background: #ffffff;
-    box-shadow: -10px 4px 24px rgba(0, 0, 0, 0.1);
-    padding: 30px;
+.drawer {
+  position: absolute;
+  width: 420px;
+  height: 100%;
+  right: 0px;
+  background: #ffffff;
+  box-shadow: var(--drawer);
+  display: flex;
+  flex-direction: column;
+  z-index: 10;
+  -webkit-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+  animation: slide-in 0.3s forwards;
+
+  &_content {
     display: flex;
     flex-direction: column;
-  
-    h2 {
-      margin-top: 30px;
-    }
-    p {
-      margin: 0;
-    }
+    align-items: center;
+    justify-content: space-between;
+    padding: 30px;
+    height: 100%;
   }
+}
 
-  .close{
-    font-size: 2rem;
-    position: absolute;
-    cursor: pointer;
-  }
+.drawer_header {
+  background-color: var(--black-1);
+  position: relative;
+  width: 100%;
+}
 
+.header {
+  height: 6rem;
+  font-size: 3rem;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 15px;
+  color: var(--gray-2);
+}
 
-  
-  .customCheckbox {
-    display: inline-block;
-    position: relative;
-    cursor: pointer;
-    font-size: 18px;
-    user-select: none;
-    margin-top: 20px;
-  }
-  
-  .customCheckbox span {
-    position: relative;
-    display: inline-block;
-    width: 18px;
-    height: 18px;
-    border: 1px solid #222;
-    border-radius: 50%;
-    margin-right: 13px;
-  }
-
-  .customCheckbox input{
-    position: absolute;
-    top: 2px;
-    z-index: 2;
-    opacity: 0;
-  }
-
-  .customCheckbox input:checked + span::before{
-    content: '';
+.close {
+  font-size: 3rem;
   position: absolute;
-  width: 10px;
-  height: 10px;
-  background-color: #222;
-  left: 3px;
-  top: 3px;
-  border-radius: 50%;
+  top: 50%;
+  left: 1rem;
+  transform: translate(0, -50%);
+  cursor: pointer;
+  border-radius: 5px;
+  cursor: pointer;
+  display: flex;
+  color: var(--bg-1);
+  align-items: center;
+  justify-content: center;
+  -webkit-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background-color: var(--remind-failed);
+    color: var(--black);
   }
+}
+
+.customSelect {
+  display: flex;
+  position: relative;
+  cursor: pointer;
+  font-size: 18px;
+}
+
+.danger_zone {
+  width: 100%;
+  padding: 10px 0;
+  text-align: center;
+  border-radius: 10px;
+
+  background: var(--danger-zone-gradient);
+
+  background-size: 28.28px 28.28px;
+
+  animation: moveStripes 2s linear infinite;
+  P {
+    text-transform: uppercase;
+    color: var(--gray-1);
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+
+  button {
+    border: 2px solid transparent;
+  }
+
+  -webkit-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+
+  &:hover {
+    animation: none;
+    box-shadow: var(--danger-zone-box-shadow);
+
+    p {
+      animation: font-size-animation 2s infinite;
+    }
+    button {
+      border: 2px solid rgb(216, 0, 0);
+    }
+  }
+}
+
+@keyframes slide-in {
+  0% {
+    left: -420px;
+  }
+  100% {
+    left: 0;
+  }
+}
+
+@keyframes moveStripes {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 28.28px 28.28px;
+  }
+}
+
+@keyframes font-size-animation {
+  0% {
+    scale: 1;
+  }
+  50% {
+    scale: 1.1;
+  }
+  100% {
+    scale: 1;
+  }
+}

@@ -7,6 +7,7 @@ const buttonTypes = {
   primary: "primary",
   secondary: "secondary",
   more: "more",
+  danger_red: "danger_red",
 };
 
 export default function Button({ children, type, variant, ...rest }) {

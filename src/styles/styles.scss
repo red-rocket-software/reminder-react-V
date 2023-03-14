@@ -21,10 +21,33 @@
   --white: white;
   --white-transparent: rgba(255, 255, 255, 0.521);
   --yellow: rgb(249, 252, 69);
+  --red: #db0000;
   --login-btn: #4b6cb7;
   --login-btn-active: #395591;
   --remind-failed: rgb(255, 140, 140);
   --remind-finished: rgb(133, 255, 133);
+
+  // box-shadows
+  --danger-zone-box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px,
+    rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px,
+    rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+  --drawer: -10px 4px 24px rgba(0, 0, 0, 0.1);
+  --header: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  --header-logo: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  --header-logo-inner: rgba(0, 0, 0, 0.17) 0px -23px 25px 0px inset,
+    rgba(0, 0, 0, 0.15) 0px -18px 30px 0px inset,
+    rgba(0, 0, 0, 0.1) 0px -35px 40px 0px inset, rgba(0, 0, 0, 0.06) 0px 2px 1px,
+    rgba(0, 0, 0, 0.09) 0px 4px 2px, rgba(0, 0, 0, 0.09) 0px 8px 4px,
+    rgba(0, 0, 0, 0.09) 0px 16px 8px, rgba(0, 0, 0, 0.09) 0px 16px 16px;
+
+  // gradients
+  --danger-zone-gradient: repeating-linear-gradient(
+    -45deg,
+    rgba(255, 0, 0, 0.5),
+    rgba(255, 0, 0, 0.5) 10px,
+    rgba(204, 0, 0, 0.8) 10px,
+    rgba(204, 0, 0, 0.8) 20px
+  );
 }
 
 html {
