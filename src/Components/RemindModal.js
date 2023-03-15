@@ -1,13 +1,11 @@
 import React, { useEffect, useState, useCallback } from "react";
 import styles from "../styles/modules/modal.module.scss";
 import { MdOutlineClose } from "react-icons/md";
-import { GoCheck } from "react-icons/go";
 import Button from "./Button";
 import toast from "react-hot-toast";
 import { AnimatePresence, motion } from "framer-motion";
 import * as moment from "moment";
 import DateTimePicker from "react-datetime-picker";
-import Checkbox from "react-custom-checkbox";
 
 //  inline styles
 const dropin = {
