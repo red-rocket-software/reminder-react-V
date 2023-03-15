@@ -57,23 +57,28 @@ function ConfigDrawer({ setOpen }) {
 
         <div className={styles.drawer_content}>
           <div className={styles.config}>
-          <label htmlFor="checkbox" className={styles.customSelect}>
-            <p>How many days before the deadline do you want to be notified?</p>
-            <SelectButton id="notification" onChange={() => {}}>
-              <option value="1" key="1">
-                1
-              </option>
-              <option value="2" key="2">
-                2
-              </option>
-              <option value="3" key="3">
-                3
-              </option>
-            </SelectButton>
-          </label>
-          <Button variant="primary">Accept</Button>
+            <label htmlFor="checkbox" className={styles.customSelect}>
+              <p>
+                How many days before the deadline do you want to be notified?
+              </p>
+              <SelectButton id="notification" onChange={() => {}}>
+                <option value="disable" key="disable">
+                  Disable notifications
+                </option>
+                <option value="1" key="1">
+                  1
+                </option>
+                <option value="2" key="2">
+                  2
+                </option>
+                <option value="3" key="3">
+                  3
+                </option>
+              </SelectButton>
+            </label>
+            <Button variant="primary">Accept</Button>
           </div>
-         
+
           <div className={styles.danger_zone}>
             <p>DANGER ZONE</p>
             <Button variant="danger_red">Remove my account</Button>

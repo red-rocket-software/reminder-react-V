@@ -61,20 +61,6 @@
   font-size: 14px;
 }
 
-button {
-  text-transform: uppercase;
-  outline: 0;
-  background: var(--login-btn);
-  border: 0;
-  border-radius: 5px;
-  padding: 15px 30px;
-  color: var(--white);
-  font-size: 14px;
-  -webkit-transition: all 0.3s ease;
-  transition: all 0.3s ease;
-  cursor: pointer;
-}
-
 .avatar {
   display: flex;
   justify-content: center;

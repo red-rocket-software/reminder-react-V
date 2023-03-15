@@ -41,7 +41,10 @@ function RemindModal({
 }) {
   const [description, setDescription] = useState("");
   const [completed, setCompleted] = useState(false);
-  const [deadline_at, setDeadline_at] = useState(new Date());
+  // by default deadline_at represents the time 2 hours later than the current time
+  const [deadline_at, setDeadline_at] = useState(
+    new Date(new Date().getTime() + 2 * 60 * 60 * 1000)
+  );
   const [isCheckedNotification, setIsCheckedNotification] = useState(false);
 
   useEffect(() => {

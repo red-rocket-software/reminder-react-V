@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import styles from "../styles/modules/header.module.scss";
 import UserBar from "./UserBar";
 import { MdOutlineConstruction } from "react-icons/md";
-
+import Button from "./Button";
 import { getClasses } from "../utils/getClasses";
 
 //  redux
@@ -54,9 +54,12 @@ export const Header = () => {
             {isAuth ? (
               <>
                 <UserBar {...user} firstLeter={firstLeter} />
-                <button type="submit" onClick={onClickLogout}>
+                {/* <button type="submit" onClick={onClickLogout}>
                   Log out
-                </button>
+                </button> */}
+                <Button onClick={onClickLogout} type="submit" variant="logout">
+                  Log out
+                </Button>
               </>
             ) : (
               <div className={styles.auth}>

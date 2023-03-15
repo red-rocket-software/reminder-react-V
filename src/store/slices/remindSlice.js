@@ -186,10 +186,15 @@ const remindSlice = createSlice({
     },
     // update remind status by id
     [upateRemindStatus.fulfilled]: (state, action) => {
-      const { id, status } = action.payload;
-      const remind = state.items.find((remind) => remind.id === id);
-      if (remind) {
-        remind.completed = status;
+      if (state.filter !== "all") {
+        const { id } = action.payload;
+        state.items = state.items.filter((el) => el.id !== id);
+      } else {
+        const { id, status } = action.payload;
+        const remind = state.items.find((remind) => remind.id === id);
+        if (remind) {
+          remind.completed = status;
+        }
       }
     },
     [updateRemind.rejected]: (state, action) => {

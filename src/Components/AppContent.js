@@ -39,14 +39,14 @@ function AppContent() {
   const { nextCursor, page } = useSelector((state) => state.reminds.pageInfo);
 
   const onLoadMoreButton = useCallback(
-    (type) => {
+    (type, limit, cursor) => {
       switch (type) {
         case "all":
           dispatch(
             fetchReminds({
               listParam: "remind",
-              cursor: nextCursor,
-              limit: page.limit,
+              cursor: cursor,
+              limit: limit,
             })
           );
           break;
@@ -54,8 +54,8 @@ function AppContent() {
           dispatch(
             fetchReminds({
               listParam: "completed",
-              cursor: nextCursor,
-              limit: page.limit,
+              cursor: cursor,
+              limit: limit,
               start: moment(timeRange[0]).format("YYYY-MM-DDTHH:MM:SS"),
               end: moment(timeRange[1]).format("YYYY-MM-DDTHH:MM:SS"),
             })
@@ -65,8 +65,8 @@ function AppContent() {
           dispatch(
             fetchReminds({
               listParam: "current",
-              cursor: nextCursor,
-              limit: page.limit,
+              cursor: cursor,
+              limit: limit,
             })
           );
           break;
@@ -75,7 +75,7 @@ function AppContent() {
           break;
       }
     },
-    [dispatch, nextCursor, page.limit, timeRange]
+    [dispatch, timeRange]
   );
 
   return (
@@ -92,6 +92,8 @@ function AppContent() {
               <RemindItem
                 remind={remind}
                 key={remind.id ? remind.id : Math.random()}
+                // loadMoreReminds needed to  download one reminder instead of the deleted one
+                loadMoreReminds={onLoadMoreButton}
               />
             ))}
 
@@ -101,7 +103,7 @@ function AppContent() {
                 variant="more"
                 type="button"
                 onClick={() => {
-                  onLoadMoreButton(filter);
+                  onLoadMoreButton(filter, page.limit, nextCursor);
                 }}
               >
                 Load more
