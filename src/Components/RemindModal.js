@@ -1,13 +1,11 @@
 import React, { useEffect, useState, useCallback } from "react";
 import styles from "../styles/modules/modal.module.scss";
 import { MdOutlineClose } from "react-icons/md";
-import { GoCheck } from "react-icons/go";
 import Button from "./Button";
 import toast from "react-hot-toast";
 import { AnimatePresence, motion } from "framer-motion";
 import * as moment from "moment";
 import DateTimePicker from "react-datetime-picker";
-import Checkbox from "react-custom-checkbox";
 
 //  inline styles
 const dropin = {
@@ -41,7 +39,10 @@ function RemindModal({
 }) {
   const [description, setDescription] = useState("");
   const [completed, setCompleted] = useState(false);
-  const [deadline_at, setDeadline_at] = useState(new Date());
+  // by default deadline_at represents the time 2 hours later than the current time
+  const [deadline_at, setDeadline_at] = useState(
+    new Date(new Date().getTime() + 2 * 60 * 60 * 1000)
+  );
   const [isCheckedNotification, setIsCheckedNotification] = useState(false);
 
   useEffect(() => {

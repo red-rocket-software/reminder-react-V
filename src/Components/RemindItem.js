@@ -9,7 +9,7 @@ import toast from "react-hot-toast";
 import * as moment from "moment";
 
 // redux
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   removeRemind,
   updateRemind,
@@ -25,11 +25,13 @@ const child = {
   },
 };
 
-function RemindItem({ remind }) {
+function RemindItem({ remind, loadMoreReminds }) {
   const [checked, setChecked] = useState(false);
   const [updateModalOpen, setUpdateModalOpen] = useState(false);
 
   const dispatch = useDispatch();
+  const { filter, noMoreReminds } = useSelector((state) => state.reminds);
+  const { nextCursor } = useSelector((state) => state.reminds.pageInfo);
 
   useEffect(() => {
     if (remind.completed === "true" || remind.completed === true) {
@@ -42,13 +44,18 @@ function RemindItem({ remind }) {
   const handleDelete = useCallback(async () => {
     try {
       await dispatch(removeRemind(remind.id));
+
+      // we download one reminder instead of the deleted one
+      if (!noMoreReminds) {
+        loadMoreReminds(filter, 1, nextCursor);
+      }
       toast.success("Todo Delete Successfully");
     } catch (error) {
       toast.error("Something went wrong");
       console.log(error);
     }
-  }, [dispatch, remind.id]);
-  
+  }, [dispatch, filter, loadMoreReminds, nextCursor, noMoreReminds, remind.id]);
+
   const handleUpdate = () => {
     setUpdateModalOpen(true);
   };
@@ -68,7 +75,20 @@ function RemindItem({ remind }) {
 
   const handleCheck = useCallback(() => {
     dispatch(upateRemindStatus({ id: remind.id, status: !checked }));
-  }, [checked, dispatch, remind.id]);
+
+    // we download one reminder instead of the updated one
+    if (!noMoreReminds) {
+      loadMoreReminds(filter, 1, nextCursor);
+    }
+  }, [
+    checked,
+    dispatch,
+    filter,
+    loadMoreReminds,
+    nextCursor,
+    noMoreReminds,
+    remind.id,
+  ]);
 
   return (
     <>

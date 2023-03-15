@@ -14,7 +14,7 @@ import {
   updateFilter,
   updateTimeRange,
   sortReminds,
-  resetItems
+  resetItems,
 } from "../store/slices/remindSlice";
 
 function ContentHeader() {
@@ -47,7 +47,7 @@ function ContentHeader() {
 
   const onTimeRange = useCallback(
     (e) => {
-      dispatch(resetItems())
+      dispatch(resetItems());
       dispatch(updateTimeRange([e[0].getTime(), e[1].getTime()]));
     },
     [dispatch]
@@ -68,7 +68,7 @@ function ContentHeader() {
           fetchReminds({
             listParam: "remind",
             cursor: 0,
-            limit: page.limit,
+            limit: 5,
           })
         );
         break;
@@ -77,7 +77,7 @@ function ContentHeader() {
           fetchReminds({
             listParam: "completed",
             cursor: 0,
-            limit: page.limit,
+            limit: 5,
             start: moment(timeRange[0]).format("YYYY-MM-DDTHH:MM:00"),
             end: moment(timeRange[1]).format("YYYY-MM-DDTHH:MM:00"),
           })
@@ -89,7 +89,7 @@ function ContentHeader() {
           fetchReminds({
             listParam: "current",
             cursor: 0,
-            limit: page.limit,
+            limit: 5,
           })
         );
 
@@ -97,7 +97,7 @@ function ContentHeader() {
       default:
         break;
     }
-  }, [dispatch, filter, page.limit, timeRange]);
+  }, [dispatch, filter, timeRange]);
 
   return (
     <div className={styles.appHeader}>
