@@ -3,14 +3,16 @@ import styles from "../../styles/modules/login.module.scss";
 import { Formik } from "formik";
 import { registrationSchema } from "../../utils/schemas";
 import Oauth from "../../Components/Oauth";
-import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, Navigate } from "react-router-dom";
 import { fetchRegister } from "../../store/slices/authSlice";
 import toast from "react-hot-toast";
 
 export const Registration = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const isAuth = useSelector((state) => Boolean(state.auth.isAuth));
 
   const handleSubmit = useCallback(
     async (values) => {
@@ -24,8 +26,8 @@ export const Registration = () => {
     },
     [dispatch, navigate]
   );
-  
-  return (
+
+  return !isAuth ? (
     <div className={styles.formWrapper}>
       <Formik
         validationSchema={registrationSchema}
@@ -89,5 +91,7 @@ export const Registration = () => {
       <b>OR USE</b>
       <Oauth />
     </div>
+  ) : (
+    <Navigate to="/" />
   );
 };

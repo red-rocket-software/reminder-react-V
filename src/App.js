@@ -3,6 +3,7 @@ import { Routes, Route } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import PageTitle from "./Components/PageTitle";
 import { Home } from "./pages/Home";
+import NotFound from "./pages/NotFound";
 import { Login } from "./pages/Login/Login";
 import { Registration } from "./pages/Registration/Registration";
 import { Header } from "./Components/Header";
@@ -16,9 +17,10 @@ function App() {
         <PageTitle>Reminder GO</PageTitle>
         <div className={styles.app__wrapper}>
           <Routes>
-            <Route path="/" exact element={<Home />} />
+            <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Registration />} />
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </div>
       </div>
