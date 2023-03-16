@@ -44,6 +44,7 @@ function RemindModal({
     new Date(new Date().getTime() + 2 * 60 * 60 * 1000)
   );
   const [isCheckedNotification, setIsCheckedNotification] = useState(false);
+  console.log(isCheckedNotification);
 
   useEffect(() => {
     if (type === "update") {
@@ -68,11 +69,13 @@ function RemindModal({
         if (type === "add") {
           onCreate({
             description: description,
+            deadline_notify: isCheckedNotification,
             created_at: moment(new Date()).format("DD.MM.YYYY, hh:mm:ss"),
             deadline_at: moment(deadline_at).format("YYYY-MM-DDThh:mm"),
           });
           setDeadline_at(new Date());
           setModalOpen(false);
+          setIsCheckedNotification(!isCheckedNotification)
         }
         if (type === "update") {
           if (
@@ -159,9 +162,10 @@ function RemindModal({
 
               <label className={styles.checkbox_control}>
                 <input
+                  value={isCheckedNotification}
                   type="checkbox"
                   name="checkbox"
-                  checked={isCheckedNotification}
+                  checked={remind?.deadline_notify}
                   onChange={() => setIsCheckedNotification((prev) => !prev)}
                 />
                 <p>Notify me two hours before the deadline</p>

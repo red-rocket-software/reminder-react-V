@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, Navigate } from "react-router-dom";
 import { Formik } from "formik";
 import toast from "react-hot-toast";
-import { fetchLogin } from "../../store/slices/authSlice";
+import { fetchLogin, fetchAuthMe } from "../../store/slices/authSlice";
 import Oauth from "../../Components/Oauth";
 
 import styles from "../../styles/modules/login.module.scss";
@@ -16,6 +16,18 @@ export const Login = () => {
 
   const isAuth = useSelector((state) => Boolean(state.auth.isAuth));
 
+  const handleFetchMe = useCallback(async () => {
+    const data = await dispatch(fetchAuthMe());
+    if (!Boolean(localStorage.getItem("userInfo"))) {
+      const userData = {
+        name: data.payload?.name,
+        email: data.payload.email,
+        avatarURL: data.payload.photo,
+      };
+      localStorage.setItem("userInfo", JSON.stringify(userData));
+    }
+  }, [dispatch]);
+
   const handleSubmit = useCallback(
     async (values) => {
       try {
@@ -27,12 +39,13 @@ export const Login = () => {
         };
         localStorage.setItem("userInfo", JSON.stringify(userData));
         toast.success("Logged in Successfully");
+        handleFetchMe()
         navigate("/");
       } catch (error) {
         toast.success("Failed to login");
       }
     },
-    [dispatch, navigate]
+    [dispatch, navigate, handleFetchMe]
   );
 
   return (!isAuth?<div className={styles.formWrapper}>
