@@ -6,6 +6,7 @@ import toast from "react-hot-toast";
 import { AnimatePresence, motion } from "framer-motion";
 import * as moment from "moment";
 import DateTimePicker from "react-datetime-picker";
+import finalPropsSelectorFactory from "react-redux/es/connect/selectorFactory";
 
 //  inline styles
 const dropin = {
@@ -39,21 +40,19 @@ function RemindModal({
 }) {
   const [description, setDescription] = useState("");
   const [completed, setCompleted] = useState(false);
-  // by default deadline_at represents the time 2 hours later than the current time
-  const [deadline_at, setDeadline_at] = useState(
-    new Date(new Date().getTime() + 2 * 60 * 60 * 1000)
-  );
+  const [deadline_at, setDeadline_at] = useState(new Date());
   const [isCheckedNotification, setIsCheckedNotification] = useState(false);
-  console.log(isCheckedNotification);
 
   useEffect(() => {
     if (type === "update") {
       setDescription(remind.description);
       setCompleted(remind.completed);
       setDeadline_at(new Date(remind.deadline_at));
+      setIsCheckedNotification(remind.deadline_notify);
     } else if (type === "add") {
       setDescription("");
       setCompleted(false);
+      setIsCheckedNotification(false);
     }
   }, [modalOpen, remind, type]);
 
@@ -70,22 +69,28 @@ function RemindModal({
           onCreate({
             description: description,
             deadline_notify: isCheckedNotification,
-            created_at: moment(new Date()).format("DD.MM.YYYY, hh:mm:ss"),
-            deadline_at: moment(deadline_at).format("YYYY-MM-DDThh:mm"),
+            created_at: moment(new Date()).format("DD.MM.YYYY, HH:mm:ss"),
+            deadline_at: moment(deadline_at).format("YYYY-MM-DDTHH:mm"),
           });
           setDeadline_at(new Date());
+          setIsCheckedNotification(false);
           setModalOpen(false);
-          setIsCheckedNotification(!isCheckedNotification)
         }
         if (type === "update") {
           if (
             remind.description !== description ||
             remind.completed !== completed ||
-            remind.deadline_at !== deadline_at
+            remind.deadline_at !== deadline_at ||
+            remind.deadline_notify !== isCheckedNotification
           ) {
             onUpdate({
               id: remind.id,
-              remind: { ...remind, description, deadline_at },
+              remind: {
+                ...remind,
+                description,
+                deadline_at,
+                deadline_notify: isCheckedNotification,
+              },
             });
           } else {
             return;
@@ -98,6 +103,7 @@ function RemindModal({
       completed,
       deadline_at,
       description,
+      isCheckedNotification,
       onCreate,
       onUpdate,
       remind,
@@ -106,14 +112,43 @@ function RemindModal({
     ]
   );
 
+  const changeNotificationStatus = useCallback(() => {
+    setIsCheckedNotification((prev) => !prev);
+  }, [isCheckedNotification]);
+
+  // actions on press ESC and click on overlay
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.key === "Escape") {
+        document.removeEventListener("keydown", handleKeyDown);
+        setModalOpen(false);
+      }
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  });
+
+  const onOverlayClick = useCallback(
+    (event) => {
+      if (event.target.id === "wrapper") {
+        setModalOpen(false);
+      }
+    },
+    [setModalOpen]
+  );
+
   return (
     <AnimatePresence>
       {modalOpen && (
         <motion.div
+          id="wrapper"
           className={styles.wrapper}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
+          onClick={onOverlayClick}
         >
           <motion.div
             className={styles.container}
@@ -162,11 +197,11 @@ function RemindModal({
 
               <label className={styles.checkbox_control}>
                 <input
-                  value={isCheckedNotification}
+                  // value={isCheckedNotification}
                   type="checkbox"
                   name="checkbox"
-                  checked={remind?.deadline_notify}
-                  onChange={() => setIsCheckedNotification((prev) => !prev)}
+                  checked={isCheckedNotification}
+                  onChange={changeNotificationStatus}
                 />
                 <p>Notify me two hours before the deadline</p>
               </label>

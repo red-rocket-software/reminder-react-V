@@ -115,18 +115,28 @@ function RemindItem({ remind, loadMoreReminds }) {
           </div>
           <div className={styles.texts}>
             <p className={styles.time}>
-              created: {moment(remind.created_at).format("DD-MM-YYYY hh:mm:ss")}
+              created:{" "}
+              {moment
+                .utc(remind.created_at)
+                // .local()
+                .format("DD-MM-YYYY HH:mm:ss")}
             </p>
 
             <p className={styles.time}>
               deadline:{" "}
-              {moment(remind.deadline_at).format("DD-MM-YYYY hh:mm:ss")}
+              {moment
+                .utc(remind.deadline_at)
+                // .local()
+                .format("DD-MM-YYYY HH:mm:ss")}
             </p>
 
             <p className={styles.time}>
               {remind.completed &&
                 "finished at: " +
-                  moment(remind.finished_at).format("DD-MM-YYYY hh:mm:00")}
+                  moment
+                    .utc(remind.finished_at)
+                    // .local()
+                    .format("DD-MM-YYYY HH:mm:ss")}
             </p>
           </div>
         </div>
@@ -142,15 +152,18 @@ function RemindItem({ remind, loadMoreReminds }) {
           >
             <MdDelete />
           </div>
-          <div
-            className={styles.icon}
-            onClick={handleUpdate}
-            role="button"
-            onKeyDown={handleUpdate}
-            tabIndex={0}
-          >
-            <MdEdit />
-          </div>
+
+          {!checked && (
+            <div
+              className={styles.icon}
+              onClick={handleUpdate}
+              role="button"
+              onKeyDown={handleUpdate}
+              tabIndex={0}
+            >
+              <MdEdit />
+            </div>
+          )}
         </div>
       </motion.div>
 

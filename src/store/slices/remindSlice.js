@@ -148,7 +148,6 @@ const remindSlice = createSlice({
     },
     //create  remind
     [createRemind.fulfilled]: (state, action) => {
-      console.log(action);
       const newRemind = {
         id: action.meta.requestId, //! change remind ID!!!!!
         description: action.meta.arg.description,
@@ -157,6 +156,7 @@ const remindSlice = createSlice({
         deadline_at: action.meta.arg.description.deadline_at,
         completed: false,
       };
+      console.log(newRemind);
       state.items.unshift(newRemind);
     },
     [createRemind.rejected]: (state, action) => {
