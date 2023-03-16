@@ -11,6 +11,15 @@ export const fetchLogin = createAsyncThunk(
   }
 );
 
+export const fetchDelete = createAsyncThunk(
+  "auth/fetchDelete",
+  async (id) => {
+    await axios.delete(`/user/${id}`,  {
+      withCredentials: true,
+    });
+  }
+);
+
 export const fetchAuthMe = createAsyncThunk("/fetchAuthMe", async () => {
   const { data } = await axios.get("/fetchMe", {
     withCredentials: true,
@@ -86,6 +95,15 @@ const authSlice = createSlice({
     },
     [fetchRegister.rejected]: (state, action) => {
       state.user = null;
+      state.status = "error";
+      state.error = action.error.message;
+    },
+    [fetchDelete.fulfilled]: (state, action) => {
+      state.user = null;
+      state.isAuth = false;
+      state.status = "loaded";
+    },
+    [fetchDelete.rejected]: (state, action) => {
       state.status = "error";
       state.error = action.error.message;
     },

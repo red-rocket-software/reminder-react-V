@@ -1,13 +1,17 @@
-import React, { useCallback, useState, useEffect } from "react";
-import styles from "../styles/modules/drawer.module.scss";
-import { MdClose } from "react-icons/md";
-import Button, { SelectButton } from "./Button";
-import { useSelector } from "react-redux";
-import axios from "../utils/axios.js";
+import React, { useCallback, useState, useEffect } from 'react';
+import styles from '../styles/modules/drawer.module.scss';
+import { MdClose } from 'react-icons/md';
+import Button, { SelectButton } from './Button';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchDelete } from "../store/slices/authSlice";
+import { useNavigate } from 'react-router-dom';
 
 function ConfigDrawer({ setOpen }) {
   const { user } = useSelector((state) => state.auth);
-  const [checkedStatus, setCheckedStatus] = useState(user.notification);
+  //const [checkedStatus, setCheckedStatus] = useState(user.notification);
+
+  const dispatch = useDispatch();
+  const navigator = useNavigate();
 
   // const handleCheckNotify = useCallback(async () => {
   //   try {
@@ -25,25 +29,37 @@ function ConfigDrawer({ setOpen }) {
 
   useEffect(() => {
     const handleKeyDown = (event) => {
-      if (event.key === "Escape") {
-        document.removeEventListener("keydown", handleKeyDown);
+      if (event.key === 'Escape') {
+        document.removeEventListener('keydown', handleKeyDown);
         setOpen();
       }
     };
-    document.addEventListener("keydown", handleKeyDown);
+    document.addEventListener('keydown', handleKeyDown);
     return () => {
-      document.removeEventListener("keydown", handleKeyDown);
+      document.removeEventListener('keydown', handleKeyDown);
     };
   }, [setOpen]);
 
   const onOverlayClick = useCallback(
     (event) => {
-      if (event.target.id === "overlay") {
+      if (event.target.id === 'overlay') {
         setOpen();
       }
     },
     [setOpen]
   );
+
+  const handleDelete = useCallback(async () => {
+    try {
+      dispatch(fetchDelete(user.id));
+      localStorage.removeItem("userInfo");
+      setOpen(false)
+      navigator('/');
+    } catch (error) {
+      console.log(error);
+      return error;
+    }
+  }, [dispatch, navigator, user?.id, setOpen]);
 
   return (
     <div id="overlay" className={styles.overlay} onClick={onOverlayClick}>
@@ -81,7 +97,7 @@ function ConfigDrawer({ setOpen }) {
 
           <div className={styles.danger_zone}>
             <p>DANGER ZONE</p>
-            <Button variant="danger_red">Remove my account</Button>
+            <Button variant="danger_red" onClick={handleDelete}>Remove my account</Button>
           </div>
         </div>
       </div>
