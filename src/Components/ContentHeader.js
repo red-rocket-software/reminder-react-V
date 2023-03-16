@@ -22,7 +22,6 @@ function ContentHeader() {
 
   const dispatch = useDispatch();
 
-  const { page } = useSelector((state) => state.reminds.pageInfo);
   const { filter, timeRange } = useSelector((state) => state.reminds);
 
   const onCreateRemind = useCallback(

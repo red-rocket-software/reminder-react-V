@@ -1,31 +1,58 @@
 import React, { useCallback, useState, useEffect } from 'react';
 import styles from '../styles/modules/drawer.module.scss';
+import stylesSelect from '../styles/modules/button.module.scss';
 import { MdClose } from 'react-icons/md';
-import Button, { SelectButton } from './Button';
-import { useDispatch, useSelector } from 'react-redux';
-import { fetchDelete } from "../store/slices/authSlice";
+import Button from './Button';
+import { useDispatch } from 'react-redux';
+import { fetchDelete } from '../store/slices/authSlice';
 import { useNavigate } from 'react-router-dom';
+import axios from '../utils/axios.js';
+import { getClasses } from '../utils/getClasses';
 
 function ConfigDrawer({ setOpen }) {
-  const { user } = useSelector((state) => state.auth);
-  //const [checkedStatus, setCheckedStatus] = useState(user.notification);
-
+  const user = JSON.parse(localStorage.getItem('userInfo'));
+  const [checkedStatus, setCheckedStatus] = useState(
+    JSON.parse(localStorage.getItem('userNotifyStatus'))
+  );
+  const [period, setPeriod] = useState(
+    JSON.parse(localStorage.getItem('userNotifyStatusPeriod'))
+  );
+  console.log(period);
   const dispatch = useDispatch();
   const navigator = useNavigate();
 
-  // const handleCheckNotify = useCallback(async () => {
-  //   try {
-  //     await axios.put(
-  //       `/user/${user.id}`,
-  //       { notification: !checkedStatus },
-  //       { withCredentials: true }
-  //     );
-  //     setCheckedStatus(!checkedStatus);
-  //   } catch (error) {
-  //     console.log(error);
-  //     return error;
-  //   }
-  // }, [checkedStatus, user.id]);
+  const handleCheckNotify = useCallback(async () => {
+    try {
+      await axios.put(
+        `/user/${user.id}`,
+        { notification: !checkedStatus, period: Number(period) },
+        { withCredentials: true }
+      );
+      localStorage.setItem('userNotifyStatus', JSON.stringify(!checkedStatus));
+      setCheckedStatus(!checkedStatus);
+    } catch (error) {
+      console.log(error);
+      return error;
+    }
+  }, [checkedStatus, user.id, period]);
+
+  const handleCheckNotifySelect = useCallback(
+    async (e) => {
+      try {
+        await axios.put(
+          `/user/${user.id}`,
+          { period: Number(e.target.value) },
+          { withCredentials: true }
+        );
+        localStorage.setItem('userNotifyStatusPeriod', JSON.stringify(Number(e.target.value)));
+        setPeriod(e.target.value);
+      } catch (error) {
+        console.log(error);
+        return error;
+      }
+    },
+    [checkedStatus, user.id, period]
+  );
 
   useEffect(() => {
     const handleKeyDown = (event) => {
@@ -52,8 +79,8 @@ function ConfigDrawer({ setOpen }) {
   const handleDelete = useCallback(async () => {
     try {
       dispatch(fetchDelete(user.id));
-      localStorage.removeItem("userInfo");
-      setOpen(false)
+      localStorage.removeItem('userInfo');
+      setOpen(false);
       navigator('/');
     } catch (error) {
       console.log(error);
@@ -73,31 +100,48 @@ function ConfigDrawer({ setOpen }) {
 
         <div className={styles.drawer_content}>
           <div className={styles.config}>
-            <label htmlFor="checkbox" className={styles.customSelect}>
-              <p>
-                How many days before the deadline do you want to be notified?
-              </p>
-              <SelectButton id="notification" onChange={() => {}}>
-                <option value="disable" key="disable">
-                  Disable notifications
-                </option>
-                <option value="1" key="1">
-                  1
-                </option>
-                <option value="2" key="2">
-                  2
-                </option>
-                <option value="3" key="3">
-                  3
-                </option>
-              </SelectButton>
+            <label className={styles.checkbox_control}>
+              <input
+                type="checkbox"
+                name="checkbox"
+                onChange={handleCheckNotify}
+                checked={checkedStatus}
+              />
+              <p>I want to recieve notificatiom</p>
             </label>
-            <Button variant="primary">Accept</Button>
+            {checkedStatus && (
+              <label htmlFor="checkbox" className={styles.customSelect}>
+                <p>
+                  How many days before the deadline do you want to be notified?
+                  (by default 2 days)
+                </p>
+                <select
+                  defaultValue={period}
+                  className={getClasses([
+                    stylesSelect.button,
+                    stylesSelect.button__select,
+                  ])}
+                  id="notification"
+                  onChange={(e) => handleCheckNotifySelect(e)}
+                >
+                  <option value="1" key="1">
+                    1
+                  </option>
+                  <option value="2" key="2">
+                    2
+                  </option>
+                  <option value="3" key="3">
+                    3
+                  </option>
+                </select>
+              </label>
+            )}
           </div>
-
           <div className={styles.danger_zone}>
             <p>DANGER ZONE</p>
-            <Button variant="danger_red" onClick={handleDelete}>Remove my account</Button>
+            <Button variant="danger_red" onClick={handleDelete}>
+              Remove my account
+            </Button>
           </div>
         </div>
       </div>

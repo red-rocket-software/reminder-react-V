@@ -44,7 +44,6 @@ function RemindModal({
     new Date(new Date().getTime() + 2 * 60 * 60 * 1000)
   );
   const [isCheckedNotification, setIsCheckedNotification] = useState(false);
-  console.log(isCheckedNotification);
 
   useEffect(() => {
     if (type === "update") {

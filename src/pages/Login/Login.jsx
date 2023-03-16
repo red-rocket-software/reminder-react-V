@@ -33,11 +33,16 @@ export const Login = () => {
       try {
         const data = await dispatch(fetchLogin(values));
         const userData = {
+          period: data.payload.period,
+          id: data.payload.id,
+          notification: data.payload.notification,
           name: data.payload.name,
           email: data.payload.email,
           avatarURL: data.payload.photo,
         };
         localStorage.setItem("userInfo", JSON.stringify(userData));
+        localStorage.setItem("userNotifyStatus", JSON.stringify(userData.notification));
+        localStorage.setItem("userNotifyStatusPeriod", JSON.stringify(userData.period));
         toast.success("Logged in Successfully");
         handleFetchMe()
         navigate("/");
