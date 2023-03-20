@@ -6,16 +6,21 @@
   background-color: var(--white);
   margin-bottom: 1.5rem;
   border-radius: 4px;
+
   &:last-child {
     margin-bottom: 0;
   }
 
   &_failed {
     background-color: var(--remind-failed);
+    -webkit-transition: all 0.3s ease;
+    transition: all 0.3s ease;
   }
 
   &_finished {
     background-color: var(--remind-finished);
+    -webkit-transition: all 0.3s ease;
+    transition: all 0.3s ease;
   }
 }
 .todoDetails {
