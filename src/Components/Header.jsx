@@ -31,9 +31,11 @@ export const Header = () => {
       dispatch(fetchLogout());
       dispatch(resetItems());
       localStorage.removeItem('userInfo');
+      localStorage.removeItem('userNotifyStatus');
+      localStorage.removeItem('userNotifyStatusPeriod');
       navigator('/');
     }
-  }, [dispatch]);
+  }, [dispatch, navigator]);
 
   return (
     <>
