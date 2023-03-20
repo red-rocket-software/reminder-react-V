@@ -70,7 +70,7 @@ function RemindModal({
             description: description,
             deadline_notify: isCheckedNotification,
             created_at: moment(new Date()).format("DD.MM.YYYY, hh:mm:ss"),
-            deadline_at: moment(deadline_at).format("YYYY-MM-DDThh:mm"),
+            deadline_at: moment(deadline_at).format("DD.MM.YYYY, hh:mm:ss"),
           });
           setDeadline_at(new Date());
           setModalOpen(false);

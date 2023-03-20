@@ -1,14 +1,14 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "../../utils/axios.js";
 
-export const updateNotificationStatus = createAsyncThunk(
+export const updateNotification = createAsyncThunk(
   "user/fetchNotification",
   async (params) => {
     try {
-      const { id, status } = params;
+      const { id, status, period } = params;
       axios.put(
         `/user/${id}`,
-        { notification: status },
+        { notification: status, period: period },
         { withCredentials: true }
       );
       return params;
@@ -21,7 +21,8 @@ export const updateNotificationStatus = createAsyncThunk(
 
 
 const initialState = {
-  notifyStatus: false,
+  // notifyStatus: JSON.parse(localStorage.getItem('userNotifyStatus')),
+  // period: localStorage.getItem('userNotifyStatusPeriod'),
 };
 
 const userSlice = createSlice({
@@ -29,8 +30,9 @@ const userSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: {
-    [updateNotificationStatus.fulfilled]: (state, action) => {
+    [updateNotification.fulfilled]: (state, action) => {
       state.notifyStatus = action.payload;
+      state.period = action.payload;
     },
   },
 });

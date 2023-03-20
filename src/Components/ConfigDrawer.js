@@ -8,6 +8,7 @@ import { fetchDelete } from '../store/slices/authSlice';
 import { useNavigate } from 'react-router-dom';
 import axios from '../utils/axios.js';
 import { getClasses } from '../utils/getClasses';
+import { updateNotification } from '../store/slices/userSlice';
 
 function ConfigDrawer({ setOpen }) {
   const user = JSON.parse(localStorage.getItem('userInfo'));
@@ -22,19 +23,12 @@ function ConfigDrawer({ setOpen }) {
   const navigator = useNavigate();
 
   const handleCheckNotify = useCallback(async () => {
-    try {
-      await axios.put(
-        `/user/${user.id}`,
-        { notification: !checkedStatus, period: Number(period) },
-        { withCredentials: true }
-      );
+      dispatch(updateNotification(user.id, period, checkedStatus))
+    
       localStorage.setItem('userNotifyStatus', JSON.stringify(!checkedStatus));
       setCheckedStatus(!checkedStatus);
-    } catch (error) {
-      console.log(error);
-      return error;
-    }
-  }, [checkedStatus, user.id, period]);
+    
+  }, [checkedStatus, user.id, period, dispatch]);
 
   const handleCheckNotifySelect = useCallback(
     async (e) => {
