@@ -43,14 +43,13 @@ function RemindModal({
   const [completed, setCompleted] = useState(false);
   const [deadline_at, setDeadline_at] = useState(new Date());
   const [deadline_notify, setDeadline_notify] = useState(false);
-  const [notificationArray, setNotificationArray] = useState([]);
+  const [notify_period, setNotify_period] = useState([]);
 
   const getNotificationArrayFromRemind = useCallback((reminds) => {
-    const filteredReminds = reminds.filter(
+    const filteredReminds = reminds?.filter(
       (remind) => remind !== "0001-01-01T00:00:00Z"
     );
-    console.log(filteredReminds);
-    return filteredReminds;
+    return filteredReminds ? filteredReminds : [];
   }, []);
 
   useEffect(() => {
@@ -59,16 +58,16 @@ function RemindModal({
       setCompleted(remind.completed);
       setDeadline_at(new Date(remind.deadline_at));
       setDeadline_notify(remind.deadline_notify);
-      setNotificationArray([
+      setNotify_period([
         ...getNotificationArrayFromRemind(remind.notify_period),
       ]);
     } else if (type === "add") {
       setDescription("");
       setCompleted(false);
       setDeadline_notify(false);
-      setNotificationArray([]);
+      setNotify_period([]);
     }
-  }, [modalOpen, remind, type]);
+  }, [getNotificationArrayFromRemind, modalOpen, remind, type]);
 
   const handleSumbit = useCallback(
     (e) => {
@@ -85,7 +84,7 @@ function RemindModal({
             created_at: moment(new Date()).format("DD.MM.YYYY, HH:mm:ss"),
             deadline_at: moment(deadline_at).format("YYYY-MM-DDTHH:mm:ssZ"),
             deadline_notify: deadline_notify,
-            notify_period: notificationArray,
+            notify_period: notify_period,
           });
           setDeadline_at(new Date());
           setDeadline_notify(false);
@@ -119,7 +118,7 @@ function RemindModal({
       deadline_at,
       description,
       deadline_notify,
-      notificationArray,
+      notify_period,
       onCreate,
       onUpdate,
       remind,
@@ -128,9 +127,9 @@ function RemindModal({
     ]
   );
 
-  const changeNotificationStatus = useCallback(() => {
-    setDeadline_notify(true);
-  }, []);
+  // const changeNotificationStatus = useCallback(() => {
+  //   setDeadline_notify(true);
+  // }, []);
 
   //^ actions on press ESC and click on overlay
   useEffect(() => {
@@ -156,27 +155,29 @@ function RemindModal({
   //^
 
   const onAddNotification = useCallback(() => {
-    setNotificationArray((prev) => [...prev, moment()]);
+    setDeadline_notify(true);
+    setNotify_period((prev) => [
+      ...prev,
+      "",
+    ]);
   }, []);
 
   const setNotificationValueInArray = useCallback(
     (id, timeValue) => {
-      const notificationArrayCopy = [...notificationArray];
+      const notificationArrayCopy = [...notify_period];
       notificationArrayCopy[id] = moment(timeValue).format(
         "YYYY-MM-DDTHH:mm:ssZ"
       );
-      setNotificationArray([...notificationArrayCopy]);
+      setNotify_period([...notificationArrayCopy]);
     },
-    [notificationArray]
+    [notify_period]
   );
 
   const deleteNotificationValueInArray = useCallback(
     (id) => {
-      setNotificationArray([
-        ...notificationArray.filter((_, index) => index !== id),
-      ]);
+      setNotify_period([...notify_period.filter((_, index) => index !== id)]);
     },
-    [notificationArray]
+    [notify_period]
   );
 
   return (
@@ -239,7 +240,7 @@ function RemindModal({
               <div
                 className={getClasses([
                   styles.notification,
-                  notificationArray.length !== 0 && styles.notification__db,
+                  notify_period.length !== 0 && styles.notification__db,
                 ])}
               >
                 <div className={styles.notification__contnent}>
@@ -247,18 +248,18 @@ function RemindModal({
                     color="#2f303d"
                     size="2em"
                     className={
-                      notificationArray.length !== 0 &&
-                      styles.notification__icon
+                      notify_period.length !== 0 && styles.notification__icon
                     }
                   />
 
                   <div className={styles.notification__itemsList}>
-                    {notificationArray.map((_, index) => {
+                    {notify_period.map((item, index) => {
                       return (
                         <NotificationForm
                           key={index}
                           itemID={index}
                           deadline={deadline_at}
+                          period_item={item}
                           onDelete={deleteNotificationValueInArray}
                           onValue={setNotificationValueInArray}
                         />
@@ -270,7 +271,6 @@ function RemindModal({
                 <Button
                   type="button"
                   variant="none"
-                  // disabled={moment(deadline_at).diff(moment(), "minutes") < 1}
                   onClick={onAddNotification}
                 >
                   <p className={styles.notification__title}>Add notification</p>

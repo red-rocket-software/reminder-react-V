@@ -4,10 +4,52 @@ import moment from "moment";
 import { MdClose } from "react-icons/md";
 import styles from "../styles/modules/notificationForm.module.scss";
 
-const NotificationForm = ({ deadline, itemID, onValue, onDelete }) => {
+const NotificationForm = ({
+  period_item,
+  deadline,
+  itemID,
+  onValue,
+  onDelete,
+}) => {
   const [timeValue, setTimeValue] = useState(1);
   const [timeType, setTimeType] = useState("minutes");
   const [maxTimeValue, setMaxTimeValue] = useState("");
+
+  useEffect(() => {
+    if (period_item) {
+      console.log("object");
+      const timeDiffInMinutes = moment(deadline).diff(
+        moment(period_item),
+        "minutes"
+      );
+
+      if (timeDiffInMinutes > 59) {
+        const timeDiffInHours = moment(deadline).diff(
+          moment(period_item),
+          "hours"
+        );
+
+        if (timeDiffInHours > 23) {
+          setTimeValue(moment(deadline).diff(moment(period_item), "days"));
+          setTimeType("days");
+          setMaxTimeValue(moment(deadline).diff(moment(), "days"));
+          return;
+        }
+
+        setTimeValue(timeDiffInHours);
+        setTimeType("hours");
+        setMaxTimeValue(moment(deadline).diff(moment(), "hours"));
+
+        return;
+      }
+
+      setTimeValue(timeDiffInMinutes);
+      setTimeType("minutes");
+      setMaxTimeValue(moment(deadline).diff(moment(), "minutes"));
+      return;
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [period_item]);
 
   useEffect(() => {
     setMaxTimeValue(moment(deadline).diff(moment(), timeType));
@@ -18,6 +60,7 @@ const NotificationForm = ({ deadline, itemID, onValue, onDelete }) => {
       e.preventDefault();
       setTimeType(e.target.value);
       setMaxTimeValue(moment(deadline).diff(moment(), e.target.value));
+      setTimeValue("1");
     },
     [deadline]
   );
@@ -25,11 +68,13 @@ const NotificationForm = ({ deadline, itemID, onValue, onDelete }) => {
   const changeTimeValue = useCallback(
     (e) => {
       e.preventDefault();
-      setTimeValue(e.target.value);
-
-      onValue(itemID, moment(deadline).subtract(e.target.value, timeType));
+      if (e.target.value <= maxTimeValue) {
+        setTimeValue(e.target.value);
+        onValue(itemID, moment(deadline).subtract(e.target.value, timeType));
+      }
+      console.log("too much");
     },
-    [deadline, itemID, onValue, timeType]
+    [deadline, itemID, maxTimeValue, onValue, timeType]
   );
 
   const deleteNotification = useCallback(() => {
@@ -45,13 +90,13 @@ const NotificationForm = ({ deadline, itemID, onValue, onDelete }) => {
         min="1"
         value={timeValue}
         max={maxTimeValue}
-        placeholder="1"
+        placeholder="SET PERIOD"
         type="number"
         onChange={changeTimeValue}
         className={styles.notification__value}
       />
 
-      <SelectButton id="time-type" onChange={changeType}>
+      <SelectButton id="time-type" onChange={changeType} value={timeType}>
         <option value="minutes" key="mins">
           minutes
         </option>
