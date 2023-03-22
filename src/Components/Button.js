@@ -9,6 +9,7 @@ const buttonTypes = {
   more: "more",
   danger_red: "danger_red",
   logout: "logout",
+  none: "none"
 };
 
 export default function Button({ children, type, variant, ...rest }) {

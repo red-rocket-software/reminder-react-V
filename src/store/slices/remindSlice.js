@@ -25,6 +25,7 @@ export const fetchReminds = createAsyncThunk(
 export const createRemind = createAsyncThunk(
   "remind/createRemind",
   async (remind) => {
+    console.log(remind);
     try {
       axios.post(`/remind`, remind, { withCredentials: true });
     } catch (error) {
@@ -156,7 +157,7 @@ const remindSlice = createSlice({
         deadline_at: action.meta.arg.description.deadline_at,
         completed: false,
       };
-      console.log(newRemind);
+
       state.items.unshift(newRemind);
     },
     [createRemind.rejected]: (state, action) => {

@@ -66,3 +66,13 @@
     background-color: var(--red);
   }
 }
+
+.button--none {
+  background-color: transparent;
+  margin: 0;
+  color: var(--black-1);
+  &:hover {
+    color: var(--black-2);
+    background-color: var(--white-transparent);
+  }
+}

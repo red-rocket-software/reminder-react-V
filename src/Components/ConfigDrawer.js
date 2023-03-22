@@ -1,23 +1,22 @@
-import React, { useCallback, useState, useEffect } from 'react';
-import styles from '../styles/modules/drawer.module.scss';
-import stylesSelect from '../styles/modules/button.module.scss';
-import { MdClose } from 'react-icons/md';
-import Button from './Button';
-import { useDispatch } from 'react-redux';
-import { fetchDelete } from '../store/slices/authSlice';
-import { useNavigate } from 'react-router-dom';
-import axios from '../utils/axios.js';
-import { getClasses } from '../utils/getClasses';
+import React, { useCallback, useState, useEffect } from "react";
+import styles from "../styles/modules/drawer.module.scss";
+import stylesSelect from "../styles/modules/button.module.scss";
+import { MdClose } from "react-icons/md";
+import Button from "./Button";
+import { useDispatch } from "react-redux";
+import { fetchDelete } from "../store/slices/authSlice";
+import { useNavigate } from "react-router-dom";
+import axios from "../utils/axios.js";
+import { getClasses } from "../utils/getClasses";
 
 function ConfigDrawer({ setOpen }) {
-  const user = JSON.parse(localStorage.getItem('userInfo'));
+  const user = JSON.parse(localStorage.getItem("userInfo"));
   const [checkedStatus, setCheckedStatus] = useState(
-    JSON.parse(localStorage.getItem('userNotifyStatus'))
+    JSON.parse(localStorage.getItem("userNotifyStatus"))
   );
   const [period, setPeriod] = useState(
-    JSON.parse(localStorage.getItem('userNotifyStatusPeriod'))
+    JSON.parse(localStorage.getItem("userNotifyStatusPeriod"))
   );
-  console.log(period);
   const dispatch = useDispatch();
   const navigator = useNavigate();
 
@@ -28,7 +27,7 @@ function ConfigDrawer({ setOpen }) {
         { notification: !checkedStatus, period: Number(period) },
         { withCredentials: true }
       );
-      localStorage.setItem('userNotifyStatus', JSON.stringify(!checkedStatus));
+      localStorage.setItem("userNotifyStatus", JSON.stringify(!checkedStatus));
       setCheckedStatus(!checkedStatus);
     } catch (error) {
       console.log(error);
@@ -44,32 +43,35 @@ function ConfigDrawer({ setOpen }) {
           { period: Number(e.target.value) },
           { withCredentials: true }
         );
-        localStorage.setItem('userNotifyStatusPeriod', JSON.stringify(Number(e.target.value)));
+        localStorage.setItem(
+          "userNotifyStatusPeriod",
+          JSON.stringify(Number(e.target.value))
+        );
         setPeriod(e.target.value);
       } catch (error) {
         console.log(error);
         return error;
       }
     },
-    [checkedStatus, user.id, period]
+    [user.id]
   );
 
   useEffect(() => {
     const handleKeyDown = (event) => {
-      if (event.key === 'Escape') {
-        document.removeEventListener('keydown', handleKeyDown);
+      if (event.key === "Escape") {
+        document.removeEventListener("keydown", handleKeyDown);
         setOpen();
       }
     };
-    document.addEventListener('keydown', handleKeyDown);
+    document.addEventListener("keydown", handleKeyDown);
     return () => {
-      document.removeEventListener('keydown', handleKeyDown);
+      document.removeEventListener("keydown", handleKeyDown);
     };
   }, [setOpen]);
 
   const onOverlayClick = useCallback(
     (event) => {
-      if (event.target.id === 'overlay') {
+      if (event.target.id === "overlay") {
         setOpen();
       }
     },
@@ -79,9 +81,9 @@ function ConfigDrawer({ setOpen }) {
   const handleDelete = useCallback(async () => {
     try {
       dispatch(fetchDelete(user.id));
-      localStorage.removeItem('userInfo');
+      localStorage.removeItem("userInfo");
       setOpen(false);
-      navigator('/');
+      navigator("/");
     } catch (error) {
       console.log(error);
       return error;
@@ -107,7 +109,7 @@ function ConfigDrawer({ setOpen }) {
                 onChange={handleCheckNotify}
                 checked={checkedStatus}
               />
-              <p>I want to recieve notificatiom</p>
+              <p>I want to recieve notification</p>
             </label>
             {checkedStatus && (
               <label htmlFor="checkbox" className={styles.customSelect}>
