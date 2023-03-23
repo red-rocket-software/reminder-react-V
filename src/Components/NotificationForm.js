@@ -17,7 +17,6 @@ const NotificationForm = ({
 
   useEffect(() => {
     if (period_item) {
-      console.log("object");
       const timeDiffInMinutes = moment(deadline).diff(
         moment(period_item),
         "minutes"
@@ -71,8 +70,12 @@ const NotificationForm = ({
       if (e.target.value <= maxTimeValue) {
         setTimeValue(e.target.value);
         onValue(itemID, moment(deadline).subtract(e.target.value, timeType));
+        // console.log(
+        //   moment(deadline)
+        //     .subtract(e.target.value, timeType)
+        //     .format("YYYY-MM-DDTHH:mm:ssZ")
+        // );
       }
-      console.log("too much");
     },
     [deadline, itemID, maxTimeValue, onValue, timeType]
   );
@@ -116,13 +119,13 @@ const NotificationForm = ({
         )}
       </SelectButton>
 
-      <button
+      {/* <button
         className={styles.button__delete}
         type="button"
         onClick={deleteNotification}
       >
         <MdClose size="2em" />
-      </button>
+      </button> */}
     </div>
   );
 };

@@ -45,13 +45,20 @@ function RemindModal({
   const [deadline_notify, setDeadline_notify] = useState(false);
   const [notify_period, setNotify_period] = useState([]);
 
+  // a function that does not skip array elements of type "0001-01-01T00:00:00Z"
   const getNotificationArrayFromRemind = useCallback((reminds) => {
-    const filteredReminds = reminds?.filter(
-      (remind) => remind !== "0001-01-01T00:00:00Z"
-    );
+    const filteredReminds = reminds?.reduce((acc, remind) => {
+      if (remind !== "0001-01-01T00:00:00Z") {
+        acc.push(new Date(remind));
+      }
+      return acc;
+    }, []);
     return filteredReminds ? filteredReminds : [];
   }, []);
 
+  console.log("notify_period: ", notify_period);
+
+  // load initial values to state
   useEffect(() => {
     if (type === "update") {
       setDescription(remind.description);
@@ -95,7 +102,10 @@ function RemindModal({
             remind.description !== description ||
             remind.completed !== completed ||
             remind.deadline_at !== deadline_at ||
-            remind.deadline_notify !== deadline_notify
+            remind.deadline_notify !== deadline_notify ||
+            JSON.stringify([
+              ...getNotificationArrayFromRemind(remind.notify_period),
+            ]) !== JSON.stringify(deadline_notify)
           ) {
             onUpdate({
               id: remind.id,
@@ -104,6 +114,7 @@ function RemindModal({
                 description,
                 deadline_at,
                 deadline_notify,
+                notify_period,
               },
             });
           } else {
@@ -114,22 +125,19 @@ function RemindModal({
       }
     },
     [
-      completed,
-      deadline_at,
       description,
+      deadline_at,
+      type,
+      setModalOpen,
+      onCreate,
       deadline_notify,
       notify_period,
-      onCreate,
-      onUpdate,
       remind,
-      setModalOpen,
-      type,
+      completed,
+      getNotificationArrayFromRemind,
+      onUpdate,
     ]
   );
-
-  // const changeNotificationStatus = useCallback(() => {
-  //   setDeadline_notify(true);
-  // }, []);
 
   //^ actions on press ESC and click on overlay
   useEffect(() => {
@@ -156,10 +164,7 @@ function RemindModal({
 
   const onAddNotification = useCallback(() => {
     setDeadline_notify(true);
-    setNotify_period((prev) => [
-      ...prev,
-      "",
-    ]);
+    setNotify_period((prev) => [...prev, ""]);
   }, []);
 
   const setNotificationValueInArray = useCallback(
