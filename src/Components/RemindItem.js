@@ -116,27 +116,22 @@ function RemindItem({ remind, loadMoreReminds }) {
           <div className={styles.texts}>
             <p className={styles.time}>
               created:{" "}
-              {moment
-                .utc(remind.created_at)
-                // .local()
-                .format("DD-MM-YYYY HH:mm:ss")}
+              {moment.utc(remind.created_at).format("DD-MM-YYYY HH:mm:ss")}
             </p>
 
             <p className={styles.time}>
               deadline:{" "}
-              {moment
-                .utc(remind.deadline_at)
-                // .local()
-                .format("DD-MM-YYYY HH:mm:ss")}
+              {moment.utc(remind.deadline_at).format("DD-MM-YYYY HH:mm:ss")}
             </p>
 
             <p className={styles.time}>
               {remind.completed &&
                 "finished at: " +
-                  moment
-                    .utc(remind.finished_at)
-                    // .local()
-                    .format("DD-MM-YYYY HH:mm:ss")}
+                  (remind.finished_at
+                    ? moment
+                        .utc(remind.finished_at)
+                        .format("DD-MM-YYYY HH:mm:ss")
+                    : moment().format("DD-MM-YYYY HH:mm:ss"))}
             </p>
           </div>
         </div>

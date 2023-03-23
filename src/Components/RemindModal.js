@@ -49,21 +49,21 @@ function RemindModal({
   const getNotificationArrayFromRemind = useCallback((reminds) => {
     const filteredReminds = reminds?.reduce((acc, remind) => {
       if (remind !== "0001-01-01T00:00:00Z") {
-        acc.push(new Date(remind));
+        acc.push(moment.utc(remind).format("YYYY-MM-DDTHH:mm:ss"));
       }
       return acc;
     }, []);
     return filteredReminds ? filteredReminds : [];
   }, []);
 
-  console.log("notify_period: ", notify_period);
-
   // load initial values to state
   useEffect(() => {
     if (type === "update") {
       setDescription(remind.description);
       setCompleted(remind.completed);
-      setDeadline_at(new Date(remind.deadline_at));
+      setDeadline_at(
+        new Date(moment.utc(remind?.deadline_at).format("YYYY-MM-DDTHH:mm:ss"))
+      );
       setDeadline_notify(remind.deadline_notify);
       setNotify_period([
         ...getNotificationArrayFromRemind(remind.notify_period),
@@ -97,22 +97,27 @@ function RemindModal({
           setDeadline_notify(false);
           setModalOpen(false);
         }
+
         if (type === "update") {
+          console.log(deadline_at);
+
           if (
             remind.description !== description ||
             remind.completed !== completed ||
-            remind.deadline_at !== deadline_at ||
+            new Date(
+              moment.utc(remind.deadline_at).format("YYYY-MM-DDTHH:mm:ss")
+            ).getTime() !== deadline_at.getTime() ||
             remind.deadline_notify !== deadline_notify ||
-            JSON.stringify([
-              ...getNotificationArrayFromRemind(remind.notify_period),
-            ]) !== JSON.stringify(deadline_notify)
+            JSON.stringify(
+              getNotificationArrayFromRemind(remind.notify_period)
+            ) !== JSON.stringify(notify_period)
           ) {
             onUpdate({
               id: remind.id,
               remind: {
                 ...remind,
                 description,
-                deadline_at,
+                deadline_at: moment(deadline_at).format("YYYY-MM-DDTHH:mm:ss"),
                 deadline_notify,
                 notify_period,
               },
@@ -169,9 +174,13 @@ function RemindModal({
 
   const setNotificationValueInArray = useCallback(
     (id, timeValue) => {
+      console.log(
+        "timeValue: ",
+        moment(timeValue).format("YYYY-MM-DDTHH:mm:ss")
+      );
       const notificationArrayCopy = [...notify_period];
       notificationArrayCopy[id] = moment(timeValue).format(
-        "YYYY-MM-DDTHH:mm:ssZ"
+        "YYYY-MM-DDTHH:mm:ss"
       );
       setNotify_period([...notificationArrayCopy]);
     },
@@ -263,7 +272,7 @@ function RemindModal({
                         <NotificationForm
                           key={index}
                           itemID={index}
-                          deadline={deadline_at}
+                          deadline={deadline_at.getTime()}
                           period_item={item}
                           onDelete={deleteNotificationValueInArray}
                           onValue={setNotificationValueInArray}

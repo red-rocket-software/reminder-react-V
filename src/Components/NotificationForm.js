@@ -15,6 +15,8 @@ const NotificationForm = ({
   const [timeType, setTimeType] = useState("minutes");
   const [maxTimeValue, setMaxTimeValue] = useState("");
 
+  console.log("deadline: ", deadline);
+
   useEffect(() => {
     if (period_item) {
       const timeDiffInMinutes = moment(deadline).diff(
@@ -70,11 +72,6 @@ const NotificationForm = ({
       if (e.target.value <= maxTimeValue) {
         setTimeValue(e.target.value);
         onValue(itemID, moment(deadline).subtract(e.target.value, timeType));
-        // console.log(
-        //   moment(deadline)
-        //     .subtract(e.target.value, timeType)
-        //     .format("YYYY-MM-DDTHH:mm:ssZ")
-        // );
       }
     },
     [deadline, itemID, maxTimeValue, onValue, timeType]

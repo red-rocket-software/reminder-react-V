@@ -25,7 +25,6 @@ export const fetchReminds = createAsyncThunk(
 export const createRemind = createAsyncThunk(
   "remind/createRemind",
   async (remind) => {
-    console.log(remind);
     try {
       axios.post(`/remind`, remind, { withCredentials: true });
     } catch (error) {
@@ -149,12 +148,14 @@ const remindSlice = createSlice({
     },
     //create  remind
     [createRemind.fulfilled]: (state, action) => {
+      console.log(action.meta.arg);
+      console.log(moment(action.meta.arg.deadline_at));
       const newRemind = {
         id: action.meta.requestId, //! change remind ID!!!!!
         description: action.meta.arg.description,
         user_id: action.meta.requestId,
-        created_at: action.meta.arg.description.created_at,
-        deadline_at: action.meta.arg.description.deadline_at,
+        created_at: moment(action.meta.arg.created_at),
+        deadline_at: action.meta.arg.deadline_at,
         completed: false,
       };
 
@@ -173,13 +174,22 @@ const remindSlice = createSlice({
     },
     //update remind
     [updateRemind.fulfilled]: (state, action) => {
-      const { id, description, completed, deadline_at } =
-        action.meta.arg.remind;
+      const {
+        id,
+        description,
+        completed,
+        deadline_at,
+        deadline_notify,
+        notify_period,
+      } = action.meta.arg.remind;
       const remind = state.items.find((remind) => remind.id === id);
+      console.log(action.meta.arg.remind);
       if (remind) {
         remind.description = description;
-        remind.completed = completed?.getTime?.();
-        remind.deadline_at = deadline_at.getTime();
+        remind.completed = completed;
+        remind.deadline_at = deadline_at;
+        remind.deadline_notify = deadline_notify;
+        remind.notify_period = notify_period;
       }
     },
     [updateRemind.rejected]: (state, action) => {
