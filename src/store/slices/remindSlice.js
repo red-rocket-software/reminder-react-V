@@ -148,13 +148,10 @@ const remindSlice = createSlice({
     },
     //create  remind
     [createRemind.fulfilled]: (state, action) => {
-      console.log(action.meta.arg);
-      console.log(moment(action.meta.arg.deadline_at));
       const newRemind = {
         id: action.meta.requestId, //! change remind ID!!!!!
         description: action.meta.arg.description,
         user_id: action.meta.requestId,
-        created_at: moment(action.meta.arg.created_at),
         deadline_at: action.meta.arg.deadline_at,
         completed: false,
       };
@@ -183,7 +180,6 @@ const remindSlice = createSlice({
         notify_period,
       } = action.meta.arg.remind;
       const remind = state.items.find((remind) => remind.id === id);
-      console.log(action.meta.arg.remind);
       if (remind) {
         remind.description = description;
         remind.completed = completed;

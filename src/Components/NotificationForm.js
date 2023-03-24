@@ -15,8 +15,6 @@ const NotificationForm = ({
   const [timeType, setTimeType] = useState("minutes");
   const [maxTimeValue, setMaxTimeValue] = useState("");
 
-  console.log("deadline: ", deadline);
-
   useEffect(() => {
     if (period_item) {
       const timeDiffInMinutes = moment(deadline).diff(
@@ -78,7 +76,6 @@ const NotificationForm = ({
   );
 
   const deleteNotification = useCallback(() => {
-    console.log(itemID);
     onDelete(itemID);
   }, [itemID, onDelete]);
 
@@ -116,13 +113,13 @@ const NotificationForm = ({
         )}
       </SelectButton>
 
-      {/* <button
+      <button
         className={styles.button__delete}
         type="button"
         onClick={deleteNotification}
       >
-        <MdClose size="2em" />
-      </button> */}
+        <MdClose size="2rem" />
+      </button>
     </div>
   );
 };

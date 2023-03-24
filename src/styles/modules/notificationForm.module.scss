@@ -2,23 +2,23 @@
   display: flex;
   align-items: center;
   gap: 1em;
+
+  &:last-child {
+    margin-bottom: 1rem;
+  }
 }
 
 .notification__value {
-  display: inline-block;
+  display: block;
   outline: none;
   height: auto;
-  padding: 0.8rem 2rem;
-  border: none;
   border-radius: 6px;
   font-weight: 500;
   font-size: 1.6rem;
   text-decoration: none;
   text-transform: capitalize;
-  cursor: pointer;
   overflow: hidden;
   margin: 0 5px;
-  font-family: Raleway;
   -webkit-transition: all 0.3s ease;
   transition: all 0.3s ease;
   color: var(--black-2);
@@ -27,6 +27,12 @@
   border: none;
   background-color: var(--bg-3);
   cursor: pointer;
+  width: 8rem;
+
+  &:hover {
+    background-color: var(--white-transparent);
+    box-shadow: var(--button);
+  }
 }
 
 .button__delete {
@@ -46,5 +52,6 @@
 
   &:hover {
     background-color: var(--white-transparent);
+    box-shadow: var(--button);
   }
 }

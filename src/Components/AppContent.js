@@ -4,6 +4,7 @@ import moment from "moment";
 import RemindItem from "./RemindItem";
 import styles from "../styles/modules/app.module.scss";
 import Button from "./Button";
+import { onCreate_deadline_at_noZone } from "../utils/time";
 
 //  redux
 import { useSelector, useDispatch } from "react-redux";
@@ -56,8 +57,8 @@ function AppContent() {
               listParam: "completed",
               cursor: cursor,
               limit: limit,
-              start: moment(timeRange[0]).format("YYYY-MM-DDTHH:MM:SS"),
-              end: moment(timeRange[1]).format("YYYY-MM-DDTHH:MM:SS"),
+              start: moment(timeRange[0]).format(onCreate_deadline_at_noZone),
+              end: moment(timeRange[1]).format(onCreate_deadline_at_noZone),
             })
           );
           break;
