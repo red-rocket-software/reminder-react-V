@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { motion } from "framer-motion";
 import { getClasses } from "../utils/getClasses";
+import { transformFromStringToDate, noZone } from "../utils/time";
 import styles from "../styles/modules/remindItem.module.scss";
 import { MdDelete, MdEdit } from "react-icons/md";
 import CheckButton from "./CheckButton";
@@ -77,7 +78,7 @@ function RemindItem({ remind, loadMoreReminds }) {
     dispatch(upateRemindStatus({ id: remind.id, status: !checked }));
 
     // we download one reminder instead of the updated one
-    if (!noMoreReminds) {
+    if (!noMoreReminds && filter !== "all") {
       loadMoreReminds(filter, 1, nextCursor);
     }
   }, [
@@ -89,14 +90,16 @@ function RemindItem({ remind, loadMoreReminds }) {
     noMoreReminds,
     remind.id,
   ]);
-
   return (
     <>
       <motion.div
         variants={child}
         className={getClasses([
           styles.item,
-          new Date(remind.deadline_at) < new Date() && styles.item_failed,
+          transformFromStringToDate(
+            moment.utc(remind.deadline_at).format(noZone)
+          ) < transformFromStringToDate(moment().format(noZone)) &&
+            styles.item_failed,
           checked && styles.item_finished,
         ])}
       >
@@ -116,27 +119,21 @@ function RemindItem({ remind, loadMoreReminds }) {
           <div className={styles.texts}>
             <p className={styles.time}>
               created:{" "}
-              {moment
-                .utc(remind.created_at)
-                // .local()
-                .format("DD-MM-YYYY HH:mm:ss")}
+              {remind.created_at
+                ? moment.utc(remind.created_at).format(noZone)
+                : moment().format(noZone)}
             </p>
 
             <p className={styles.time}>
-              deadline:{" "}
-              {moment
-                .utc(remind.deadline_at)
-                // .local()
-                .format("DD-MM-YYYY HH:mm:ss")}
+              deadline: {moment.utc(remind.deadline_at).format(noZone)}
             </p>
 
             <p className={styles.time}>
               {remind.completed &&
                 "finished at: " +
-                  moment
-                    .utc(remind.finished_at)
-                    // .local()
-                    .format("DD-MM-YYYY HH:mm:ss")}
+                  (remind.finished_at
+                    ? moment.utc(remind.finished_at).format(noZone)
+                    : moment().format(noZone))}
             </p>
           </div>
         </div>

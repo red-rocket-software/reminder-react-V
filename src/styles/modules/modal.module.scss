@@ -122,10 +122,6 @@
   }
 }
 
-// .checkbox {
-//   margin-top: 20px;
-// }
-
 .checkbox_control {
   font-size: 2rem;
   margin-top: 20px;
@@ -167,9 +163,30 @@
   input[type="checkbox"]:checked::before {
     transform: scale(1);
   }
+}
 
-  // input[type="checkbox"]:disabled {
-  //   color: var(--checkbox-control-disabled);
-  //   cursor: not-allowed;
-  // }
+.notification {
+  display: flex;
+  gap: 1em;
+  align-items: center;
+  margin-top: 2rem;
+
+  &__db {
+    display: block;
+  }
+
+  &__contnent {
+    display: flex;
+    gap: 1em;
+    align-items: start;
+  }
+  &__icon {
+    margin-top: 10px;
+  }
+
+  &__itemsList {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+  }
 }

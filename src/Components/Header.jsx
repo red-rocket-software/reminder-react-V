@@ -1,16 +1,16 @@
-import React, { useCallback, useState } from 'react';
-import { Link, Navigate, useNavigate } from 'react-router-dom';
-import styles from '../styles/modules/header.module.scss';
-import UserBar from './UserBar';
-import { MdOutlineConstruction } from 'react-icons/md';
-import Button from './Button';
-import { getClasses } from '../utils/getClasses';
+import React, { useCallback, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import styles from "../styles/modules/header.module.scss";
+import UserBar from "./UserBar";
+import { MdOutlineConstruction } from "react-icons/md";
+import Button from "./Button";
+import { getClasses } from "../utils/getClasses";
 
 //  redux
-import { useDispatch, useSelector } from 'react-redux';
-import { fetchLogout } from '../store/slices/authSlice';
-import { resetItems } from '../store/slices/remindSlice';
-import ConfigDrawer from './ConfigDrawer';
+import { useDispatch, useSelector } from "react-redux";
+import { fetchLogout } from "../store/slices/authSlice";
+import { resetItems } from "../store/slices/remindSlice";
+import ConfigDrawer from "./ConfigDrawer";
 
 export const Header = () => {
   const [configOpen, setConfigOpen] = useState(false);
@@ -19,7 +19,7 @@ export const Header = () => {
   const navigator = useNavigate();
 
   const firstLeter =
-    isAuth && user?.name.split(' ').map((el) => el[0].toUpperCase());
+    isAuth && user?.name.split(" ").map((el) => el[0].toUpperCase());
   const dispatch = useDispatch();
 
   const onClickCongig = () => {
@@ -27,13 +27,13 @@ export const Header = () => {
   };
 
   const onClickLogout = useCallback(() => {
-    if (window.confirm('Are you sure you want to log out')) {
+    if (window.confirm("Are you sure you want to log out")) {
       dispatch(fetchLogout());
       dispatch(resetItems());
-      localStorage.removeItem('userInfo');
-      localStorage.removeItem('userNotifyStatus');
-      localStorage.removeItem('userNotifyStatusPeriod');
-      navigator('/');
+      localStorage.removeItem("userInfo");
+      localStorage.removeItem("userNotifyStatus");
+      localStorage.removeItem("userNotifyStatusPeriod");
+      navigator("/");
     }
   }, [dispatch, navigator]);
 
@@ -59,9 +59,6 @@ export const Header = () => {
             {isAuth ? (
               <>
                 <UserBar {...user} firstLeter={firstLeter} />
-                {/* <button type="submit" onClick={onClickLogout}>
-                  Log out
-                </button> */}
                 <Button onClick={onClickLogout} type="submit" variant="logout">
                   Log out
                 </Button>

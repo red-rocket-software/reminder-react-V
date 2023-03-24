@@ -1,12 +1,21 @@
 import React, { useEffect, useState, useCallback } from "react";
 import styles from "../styles/modules/modal.module.scss";
-import { MdOutlineClose } from "react-icons/md";
+import { MdOutlineClose, MdOutlineNotificationsActive } from "react-icons/md";
+import {
+  onCreate_created_at,
+  onCreate_deadline_at,
+  onCreate_deadline_at_noZone,
+  transformFromStringToDate,
+  noZone,
+} from "../utils/time";
+
 import Button from "./Button";
+import NotificationForm from "./NotificationForm";
 import toast from "react-hot-toast";
 import { AnimatePresence, motion } from "framer-motion";
 import * as moment from "moment";
 import DateTimePicker from "react-datetime-picker";
-import finalPropsSelectorFactory from "react-redux/es/connect/selectorFactory";
+import { getClasses } from "../utils/getClasses";
 
 //  inline styles
 const dropin = {
@@ -41,20 +50,41 @@ function RemindModal({
   const [description, setDescription] = useState("");
   const [completed, setCompleted] = useState(false);
   const [deadline_at, setDeadline_at] = useState(new Date());
-  const [isCheckedNotification, setIsCheckedNotification] = useState(false);
+  const [deadline_notify, setDeadline_notify] = useState(false);
+  const [notify_period, setNotify_period] = useState([]);
 
+  // a function that does not skip array elements of type "0001-01-01T00:00:00Z"
+  const getNotificationArrayFromRemind = useCallback((reminds) => {
+    const filteredReminds = reminds?.reduce((acc, remind) => {
+      if (remind !== "0001-01-01T00:00:00Z") {
+        acc.push(moment.utc(remind).format(onCreate_deadline_at_noZone));
+      }
+      return acc;
+    }, []);
+    return filteredReminds ? filteredReminds : [];
+  }, []);
+
+  // load initial values to state
   useEffect(() => {
     if (type === "update") {
       setDescription(remind.description);
       setCompleted(remind.completed);
-      setDeadline_at(new Date(remind.deadline_at));
-      setIsCheckedNotification(remind.deadline_notify);
+      setDeadline_at(
+        new Date(
+          moment.utc(remind?.deadline_at).format(onCreate_deadline_at_noZone)
+        )
+      );
+      setDeadline_notify(remind.deadline_notify);
+      setNotify_period([
+        ...getNotificationArrayFromRemind(remind.notify_period),
+      ]);
     } else if (type === "add") {
       setDescription("");
       setCompleted(false);
-      setIsCheckedNotification(false);
+      setDeadline_notify(false);
+      setNotify_period([]);
     }
-  }, [modalOpen, remind, type]);
+  }, [getNotificationArrayFromRemind, modalOpen, remind, type]);
 
   const handleSumbit = useCallback(
     (e) => {
@@ -68,28 +98,38 @@ function RemindModal({
         if (type === "add") {
           onCreate({
             description: description,
-            deadline_notify: isCheckedNotification,
-            created_at: moment(new Date()).format("DD.MM.YYYY, HH:mm:ss"),
-            deadline_at: moment(deadline_at).format("YYYY-MM-DDTHH:mm"),
+            created_at: moment(new Date()).format(onCreate_created_at),
+            deadline_at: moment(deadline_at).format(onCreate_deadline_at),
+            deadline_notify: deadline_notify,
+            notify_period: notify_period,
           });
           setDeadline_at(new Date());
-          setIsCheckedNotification(false);
+          setDeadline_notify(false);
           setModalOpen(false);
         }
+
         if (type === "update") {
           if (
             remind.description !== description ||
             remind.completed !== completed ||
-            remind.deadline_at !== deadline_at ||
-            remind.deadline_notify !== isCheckedNotification
+            new Date(
+              moment.utc(remind.deadline_at).format(onCreate_deadline_at_noZone)
+            ).getTime() !== deadline_at.getTime() ||
+            remind.deadline_notify !== deadline_notify ||
+            JSON.stringify(
+              getNotificationArrayFromRemind(remind.notify_period)
+            ) !== JSON.stringify(notify_period)
           ) {
             onUpdate({
               id: remind.id,
               remind: {
                 ...remind,
                 description,
-                deadline_at,
-                deadline_notify: isCheckedNotification,
+                deadline_at: moment(deadline_at).format(
+                  onCreate_deadline_at_noZone
+                ),
+                deadline_notify,
+                notify_period,
               },
             });
           } else {
@@ -100,23 +140,21 @@ function RemindModal({
       }
     },
     [
-      completed,
-      deadline_at,
       description,
-      isCheckedNotification,
-      onCreate,
-      onUpdate,
-      remind,
-      setModalOpen,
+      deadline_at,
       type,
+      setModalOpen,
+      onCreate,
+      deadline_notify,
+      notify_period,
+      remind,
+      completed,
+      getNotificationArrayFromRemind,
+      onUpdate,
     ]
   );
 
-  const changeNotificationStatus = useCallback(() => {
-    setIsCheckedNotification((prev) => !prev);
-  }, [isCheckedNotification]);
-
-  // actions on press ESC and click on overlay
+  //^ actions on press ESC and click on overlay
   useEffect(() => {
     const handleKeyDown = (event) => {
       if (event.key === "Escape") {
@@ -137,6 +175,31 @@ function RemindModal({
       }
     },
     [setModalOpen]
+  );
+  //^
+
+  //^ notification handle functions
+  const onAddNotification = useCallback(() => {
+    setDeadline_notify(true);
+    setNotify_period((prev) => [...prev, ""]);
+  }, []);
+
+  const setNotificationValueInArray = useCallback(
+    (id, timeValue) => {
+      const notificationArrayCopy = [...notify_period];
+      notificationArrayCopy[id] =
+        moment(timeValue).format(onCreate_deadline_at);
+      setNotify_period([...notificationArrayCopy]);
+    },
+    [notify_period]
+  );
+  //^ notification handle functions
+
+  const deleteNotificationValueInArray = useCallback(
+    (id) => {
+      setNotify_period([...notify_period.filter((_, index) => index !== id)]);
+    },
+    [notify_period]
   );
 
   return (
@@ -195,16 +258,52 @@ function RemindModal({
                 value={deadline_at}
               />
 
-              <label className={styles.checkbox_control}>
-                <input
-                  // value={isCheckedNotification}
-                  type="checkbox"
-                  name="checkbox"
-                  checked={isCheckedNotification}
-                  onChange={changeNotificationStatus}
-                />
-                <p>Notify me two hours before the deadline</p>
-              </label>
+              {/* notification section */}
+              {transformFromStringToDate(
+                moment.utc(deadline_at).format(noZone)
+              ) > transformFromStringToDate(moment().format(noZone)) && (
+                <div
+                  className={getClasses([
+                    styles.notification,
+                    notify_period.length !== 0 && styles.notification__db,
+                  ])}
+                >
+                  <div className={styles.notification__contnent}>
+                    <MdOutlineNotificationsActive
+                      color="#2f303d"
+                      size="2em"
+                      className={
+                        notify_period.length !== 0 && styles.notification__icon
+                      }
+                    />
+
+                    <div className={styles.notification__itemsList}>
+                      {notify_period.map((item, index) => {
+                        return (
+                          <NotificationForm
+                            key={index}
+                            itemID={index}
+                            deadline={deadline_at.getTime()}
+                            period_item={item}
+                            onDelete={deleteNotificationValueInArray}
+                            onValue={setNotificationValueInArray}
+                          />
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  <Button
+                    type="button"
+                    variant="none"
+                    onClick={onAddNotification}
+                  >
+                    <p className={styles.notification__title}>
+                      Add notification
+                    </p>
+                  </Button>
+                </div>
+              )}
 
               <div className={styles.buttonContainer}>
                 <Button type="submit" variant="primary">

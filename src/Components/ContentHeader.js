@@ -5,6 +5,7 @@ import RemindModal from "./RemindModal";
 import DateTimeRangePicker from "@wojtekmaj/react-datetimerange-picker";
 import moment from "moment";
 import toast from "react-hot-toast";
+import { onCreate_deadline_at_noZone } from "../utils/time";
 
 //  redux
 import { useSelector, useDispatch } from "react-redux";
@@ -77,8 +78,8 @@ function ContentHeader() {
             listParam: "completed",
             cursor: 0,
             limit: 5,
-            start: moment(timeRange[0]).format("YYYY-MM-DDTHH:MM:00"),
-            end: moment(timeRange[1]).format("YYYY-MM-DDTHH:MM:00"),
+            start: moment(timeRange[0]).format(onCreate_deadline_at_noZone),
+            end: moment(timeRange[1]).format(onCreate_deadline_at_noZone),
           })
         );
 

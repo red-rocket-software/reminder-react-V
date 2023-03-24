@@ -201,8 +201,8 @@
 
   input[type="checkbox"]::before {
     content: "";
-    width: 0.9em;
-    height: 0.9em;
+    width: 0.7em;
+    height: 0.7em;
     clip-path: polygon(10% 40%, 0 50%, 50% 100%, 100% 16%, 90% 0%, 43% 62%);
     transform: scale(0);
     transform-origin: bottom left;
