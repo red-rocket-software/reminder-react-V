@@ -260,7 +260,7 @@ function RemindModal({
 
               {/* notification section */}
               {transformFromStringToDate(
-                moment.utc(remind.deadline_at).format(noZone)
+                moment.utc(deadline_at).format(noZone)
               ) > transformFromStringToDate(moment().format(noZone)) && (
                 <div
                   className={getClasses([
