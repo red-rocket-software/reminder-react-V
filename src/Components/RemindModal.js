@@ -8,7 +8,6 @@ import {
   transformFromStringToDate,
   noZone,
 } from "../utils/time";
-
 import Button from "./Button";
 import NotificationForm from "./NotificationForm";
 import toast from "react-hot-toast";
@@ -53,6 +52,8 @@ function RemindModal({
   const [deadline_at, setDeadline_at] = useState(new Date());
   const [deadline_notify, setDeadline_notify] = useState(false);
   const [notify_period, setNotify_period] = useState([]);
+
+  const { notifyStatus, period } = useSelector((state) => state.user);
 
   // a function that does not skip array elements of type "0001-01-01T00:00:00Z"
   const getNotificationArrayFromRemind = useCallback((reminds) => {
@@ -279,55 +280,59 @@ function RemindModal({
               />
 
               {/* notification section */}
-              {transformFromStringToDate(
+
+              {notifyStatus === "true" &&
+              transformFromStringToDate(
                 moment.utc(deadline_at).format(noZone)
               ) > transformFromStringToDate(moment().format(noZone)) &&
-                Boolean(localStorage.getItem("userNotifyStatus")) && (
-                  <div
-                    className={getClasses([
-                      styles.notification,
-                      notify_period.length !== 0 && styles.notification__db,
-                    ])}
-                  >
-                    <div className={styles.notification__contnent}>
-                      <MdOutlineNotificationsActive
-                        color="#2f303d"
-                        size="2em"
-                        className={
-                          notify_period.length !== 0 &&
-                          styles.notification__icon
-                        }
-                      />
+              notifyStatus ? (
+                <div
+                  className={getClasses([
+                    styles.notification,
+                    notify_period.length !== 0 && styles.notification__db,
+                  ])}
+                >
+                  <div className={styles.notification__contnent}>
+                    <MdOutlineNotificationsActive
+                      color="#2f303d"
+                      size="2em"
+                      className={
+                        notify_period.length !== 0 && styles.notification__icon
+                      }
+                    />
 
-                      <div className={styles.notification__itemsList}>
-                        {notify_period.map((item, index) => {
-                          return (
-                            <NotificationForm
-                              key={index}
-                              itemID={index}
-                              deadline={moment(deadline_at).format(
-                                onCreate_deadline_at
-                              )}
-                              period_item={item}
-                              onDelete={deleteNotificationValueInArray}
-                              onValue={setNotificationValueInArray}
-                            />
-                          );
-                        })}
-                      </div>
+                    <div className={styles.notification__itemsList}>
+                      {notify_period.map((item, index) => {
+                        return (
+                          <NotificationForm
+                            key={index}
+                            itemID={index}
+                            deadline={moment(deadline_at).format(
+                              onCreate_deadline_at
+                            )}
+                            period_item={item}
+                            onDelete={deleteNotificationValueInArray}
+                            onValue={setNotificationValueInArray}
+                            userNotifyStatusPeriod={period}
+                          />
+                        );
+                      })}
                     </div>
-
-                    <Button
-                      type="button"
-                      variant="none"
-                      onClick={onAddNotification}
-                    >
-                      <p className={styles.notification__title}>
-                        Add notification
-                      </p>
-                    </Button>
                   </div>
-                )}
+
+                  <Button
+                    type="button"
+                    variant="none"
+                    onClick={onAddNotification}
+                  >
+                    <p className={styles.notification__title}>
+                      Add notification
+                    </p>
+                  </Button>
+                </div>
+              ) : (
+                <></>
+              )}
 
               <div className={styles.buttonContainer}>
                 <Button type="submit" variant="primary">

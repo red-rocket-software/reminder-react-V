@@ -41,10 +41,16 @@ export const Login = () => {
           avatarURL: data.payload.photo,
         };
         localStorage.setItem("userInfo", JSON.stringify(userData));
-        localStorage.setItem("userNotifyStatus", JSON.stringify(userData.notification));
-        localStorage.setItem("userNotifyStatusPeriod", JSON.stringify(userData.period));
+        localStorage.setItem(
+          "userNotifyStatus",
+          JSON.stringify(userData.notification)
+        );
+        localStorage.setItem(
+          "userNotifyStatusPeriod",
+          JSON.stringify(userData.period)
+        );
         toast.success("Logged in Successfully");
-        handleFetchMe()
+        handleFetchMe();
         navigate("/");
       } catch (error) {
         toast.success("Failed to login");
@@ -53,55 +59,59 @@ export const Login = () => {
     [dispatch, navigate, handleFetchMe]
   );
 
-  return (!isAuth?<div className={styles.formWrapper}>
-    <Formik
-      validationSchema={loginSchema}
-      initialValues={{ email: "", password: "" }}
-      onSubmit={handleSubmit}
-    >
-      {({
-        values,
-        errors,
-        touched,
-        handleChange,
-        handleBlur,
-        handleSubmit,
-      }) => (
-        <div>
-          <div className={styles.form}>
-            <form noValidate onSubmit={handleSubmit}>
-              <input
-                type="email"
-                name="email"
-                onChange={handleChange}
-                onBlur={handleBlur}
-                value={values.email}
-                placeholder="Enter email"
-                id="email"
-                autoComplete="off"
-              />
-              <p className={styles.error}>
-                {errors.email && touched.email && errors.email}
-              </p>
-              <input
-                type="password"
-                name="password"
-                onChange={handleChange}
-                onBlur={handleBlur}
-                value={values.password}
-                placeholder="Enter password"
-                autoComplete="off"
-              />
-              <p className={styles.error}>
-                {errors.password && touched.password && errors.password}
-              </p>
-              <button type="submit">Login</button>
-            </form>
+  return !isAuth ? (
+    <div className={styles.formWrapper}>
+      <Formik
+        validationSchema={loginSchema}
+        initialValues={{ email: "", password: "" }}
+        onSubmit={handleSubmit}
+      >
+        {({
+          values,
+          errors,
+          touched,
+          handleChange,
+          handleBlur,
+          handleSubmit,
+        }) => (
+          <div>
+            <div className={styles.form}>
+              <form noValidate onSubmit={handleSubmit}>
+                <input
+                  type="email"
+                  name="email"
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  value={values.email}
+                  placeholder="Enter email"
+                  id="email"
+                  autoComplete="off"
+                />
+                <p className={styles.error}>
+                  {errors.email && touched.email && errors.email}
+                </p>
+                <input
+                  type="password"
+                  name="password"
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  value={values.password}
+                  placeholder="Enter password"
+                  autoComplete="off"
+                />
+                <p className={styles.error}>
+                  {errors.password && touched.password && errors.password}
+                </p>
+                <button type="submit">Login</button>
+              </form>
+            </div>
           </div>
-        </div>
-      )}
-    </Formik>
-    <b>OR USE</b>
-    <Oauth />
-  </div>:<Navigate to="/" />);
+        )}
+      </Formik>
+      <b>OR USE</b>
+      <Oauth />
+    </div>
+  ) : (
+    <Navigate to="/" />
+  );
 };

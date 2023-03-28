@@ -20,7 +20,8 @@ export const updateNotificationStatus = createAsyncThunk(
 );
 
 const initialState = {
-  notifyStatus: false,
+  notifyStatus: localStorage.getItem("userNotifyStatus"),
+  period: localStorage.getItem("userNotifyStatusPeriod"),
 };
 
 const userSlice = createSlice({
