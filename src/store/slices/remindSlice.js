@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "../../utils/axios.js";
 import moment from "moment";
+import { onCreate_deadline_at_noZone } from "../../utils/time";
 
 export const fetchReminds = createAsyncThunk(
   "remind/fetchAllReminds",
@@ -24,15 +25,14 @@ export const fetchReminds = createAsyncThunk(
 
 export const createRemind = createAsyncThunk(
   "remind/createRemind",
-  async (remind, {rejectWithValue, fulfillWithValue}) => {
+  async (remind, { rejectWithValue, fulfillWithValue }) => {
     try {
-      const response = await axios.post(`/remind`, remind, { withCredentials: true });
-      if (!response.ok){
-        return rejectWithValue(response.data)
-      }
-      return fulfillWithValue(response.data)
+      const response = await axios.post(`/remind`, remind, {
+        withCredentials: true,
+      });
+      return fulfillWithValue(response.data);
     } catch (error) {
-      throw rejectWithValue(error.response.data)
+      throw rejectWithValue(error.response.data);
     }
   }
 );
@@ -52,9 +52,14 @@ export const updateRemind = createAsyncThunk(
   "remind/udateRemind",
   async (params) => {
     const { id, remind } = params;
-    await axios.put(`/remind/${id}`, remind, {
-      withCredentials: true,
-    });
+    try {
+      const { data } = await axios.put(`/remind/${id}`, remind, {
+        withCredentials: true,
+      });
+      return data;
+    } catch (error) {
+      console.log(error);
+    }
   }
 );
 
@@ -152,19 +157,34 @@ const remindSlice = createSlice({
     },
     //create  remind
     [createRemind.fulfilled]: (state, action) => {
+      const {
+        id,
+        description,
+        user_id,
+        deadline_at,
+        created_at,
+        completed,
+        notify_period,
+        deadline_notify,
+      } = action.payload;
+
       const newRemind = {
-        id: action.meta.requestId, //! change remind ID!!!!!
-        description: action.meta.arg.description,
-        user_id: action.meta.requestId,
-        deadline_at: action.meta.arg.deadline_at,
-        completed: false,
+        id: id,
+        description: description,
+        user_id: user_id,
+        deadline_at: deadline_at,
+        deadline_notify: deadline_notify,
+        created_at: created_at,
+        completed: completed,
+        notify_period: notify_period,
       };
+
       state.items.unshift(newRemind);
       state.error = null;
-      state.status = 'success';
+      state.status = "success";
     },
     [createRemind.rejected]: (state, action) => {
-      state.status = 'error';
+      state.status = "error";
       state.items = [];
       state.error = action.payload.message;
     },
@@ -181,11 +201,12 @@ const remindSlice = createSlice({
       const {
         id,
         description,
-        completed,
         deadline_at,
-        deadline_notify,
+        completed,
         notify_period,
-      } = action.meta.arg.remind;
+        deadline_notify,
+      } = action.payload;
+
       const remind = state.items.find((remind) => remind.id === id);
       if (remind) {
         remind.description = description;
@@ -208,6 +229,7 @@ const remindSlice = createSlice({
         const remind = state.items.find((remind) => remind.id === id);
         if (remind) {
           remind.completed = status;
+          remind.finished_at = moment().format(onCreate_deadline_at_noZone);
         }
       }
     },

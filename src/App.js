@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import PageTitle from "./Components/PageTitle";
@@ -9,7 +9,16 @@ import { Registration } from "./pages/Registration/Registration";
 import { Header } from "./Components/Header";
 import styles from "./styles/modules/app.module.scss";
 
+//redux
+import { useDispatch } from "react-redux";
+import { fetchAuthMe } from "./store/slices/authSlice";
+
 function App() {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(fetchAuthMe());
+  }, [dispatch]);
+
   return (
     <div className={styles.bg_container}>
       <Header />

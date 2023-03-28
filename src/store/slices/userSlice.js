@@ -19,9 +19,9 @@ export const updateNotificationStatus = createAsyncThunk(
   }
 );
 
-
 const initialState = {
-  notifyStatus: false,
+  notifyStatus: localStorage.getItem("userNotifyStatus"),
+  period: localStorage.getItem("userNotifyStatusPeriod"),
 };
 
 const userSlice = createSlice({
@@ -30,6 +30,7 @@ const userSlice = createSlice({
   reducers: {},
   extraReducers: {
     [updateNotificationStatus.fulfilled]: (state, action) => {
+      console.log(action.payload);
       state.notifyStatus = action.payload;
     },
   },

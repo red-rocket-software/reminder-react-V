@@ -10,10 +10,13 @@ const NotificationForm = ({
   itemID,
   onValue,
   onDelete,
+  userNotifyStatusPeriod,
 }) => {
   const [timeValue, setTimeValue] = useState(1);
   const [timeType, setTimeType] = useState("minutes");
-  const [maxTimeValue, setMaxTimeValue] = useState("");
+  const [maxTimeValue, setMaxTimeValue] = useState(null);
+
+  console.log(userNotifyStatusPeriod);
 
   useEffect(() => {
     if (period_item) {
@@ -31,7 +34,8 @@ const NotificationForm = ({
         if (timeDiffInHours > 23) {
           setTimeValue(moment(deadline).diff(moment(period_item), "days"));
           setTimeType("days");
-          setMaxTimeValue(moment(deadline).diff(moment(), "days"));
+          // setMaxTimeValue(moment(deadline).diff(moment(), "days"));
+          setMaxTimeValue(userNotifyStatusPeriod);
           return;
         }
 

@@ -8,7 +8,6 @@ import {
   transformFromStringToDate,
   noZone,
 } from "../utils/time";
-
 import Button from "./Button";
 import NotificationForm from "./NotificationForm";
 import toast from "react-hot-toast";
@@ -54,13 +53,15 @@ function RemindModal({
   const [deadline_notify, setDeadline_notify] = useState(false);
   const [notify_period, setNotify_period] = useState([]);
 
-  const error = useSelector((state) => state.reminds.error);
-  console.log(error);
+  const { notifyStatus, period } = useSelector((state) => state.user);
+
   // a function that does not skip array elements of type "0001-01-01T00:00:00Z"
   const getNotificationArrayFromRemind = useCallback((reminds) => {
     const filteredReminds = reminds?.reduce((acc, remind) => {
       if (remind !== "0001-01-01T00:00:00Z") {
-        acc.push(moment.utc(remind).format(onCreate_deadline_at_noZone));
+        acc.push(
+          new Date(moment.utc(remind).format(onCreate_deadline_at_noZone))
+        );
       }
       return acc;
     }, []);
@@ -74,7 +75,7 @@ function RemindModal({
       setCompleted(remind.completed);
       setDeadline_at(
         new Date(
-          moment.utc(remind?.deadline_at).format(onCreate_deadline_at_noZone)
+          moment.utc(remind.deadline_at).format(onCreate_deadline_at_noZone)
         )
       );
       setDeadline_notify(remind.deadline_notify);
@@ -127,18 +128,21 @@ function RemindModal({
               remind: {
                 ...remind,
                 description,
-                deadline_at: moment(deadline_at).format(
+                deadline_at: `${moment(deadline_at).format(
                   onCreate_deadline_at_noZone
-                ),
+                )}Z`,
                 deadline_notify,
-                notify_period,
+                notify_period: notify_period.map(
+                  (notify) =>
+                    `${moment(notify).format(onCreate_deadline_at_noZone)}Z`
+                ),
               },
             });
           } else {
             return;
           }
         }
-          setModalOpen(false);
+        setModalOpen(false);
       }
     },
     [
@@ -204,6 +208,23 @@ function RemindModal({
     [notify_period]
   );
 
+  const onDeadlineChange = useCallback(
+    (e) => {
+      setNotify_period((prev) =>
+        prev.map((notify) => {
+          return moment(e)
+            .subtract(
+              moment(deadline_at).diff(moment(notify), "minutes"),
+              "minutes"
+            )
+            .format(onCreate_deadline_at);
+        })
+      );
+      setDeadline_at(e);
+    },
+    [deadline_at]
+  );
+
   return (
     <AnimatePresence>
       {modalOpen && (
@@ -254,16 +275,17 @@ function RemindModal({
               <DateTimePicker
                 className={styles.datePicker}
                 id="deadlineAt"
-                onChange={(e) => {
-                  setDeadline_at(e);
-                }}
+                onChange={onDeadlineChange}
                 value={deadline_at}
               />
 
               {/* notification section */}
-              {transformFromStringToDate(
+
+              {notifyStatus === "true" &&
+              transformFromStringToDate(
                 moment.utc(deadline_at).format(noZone)
-              ) > transformFromStringToDate(moment().format(noZone)) && (
+              ) > transformFromStringToDate(moment().format(noZone)) &&
+              notifyStatus ? (
                 <div
                   className={getClasses([
                     styles.notification,
@@ -285,10 +307,13 @@ function RemindModal({
                           <NotificationForm
                             key={index}
                             itemID={index}
-                            deadline={deadline_at.getTime()}
+                            deadline={moment(deadline_at).format(
+                              onCreate_deadline_at
+                            )}
                             period_item={item}
                             onDelete={deleteNotificationValueInArray}
                             onValue={setNotificationValueInArray}
+                            userNotifyStatusPeriod={period}
                           />
                         );
                       })}
@@ -305,6 +330,8 @@ function RemindModal({
                     </p>
                   </Button>
                 </div>
+              ) : (
+                <></>
               )}
 
               <div className={styles.buttonContainer}>
