@@ -118,10 +118,7 @@ function RemindItem({ remind, loadMoreReminds }) {
           </div>
           <div className={styles.texts}>
             <p className={styles.time}>
-              created:{" "}
-              {remind.created_at
-                ? moment.utc(remind.created_at).format(noZone)
-                : moment().format(noZone)}
+              created: {moment.utc(remind.created_at).format(noZone)}
             </p>
 
             <p className={styles.time}>
@@ -130,10 +127,7 @@ function RemindItem({ remind, loadMoreReminds }) {
 
             <p className={styles.time}>
               {remind.completed &&
-                "finished at: " +
-                  (remind.finished_at
-                    ? moment.utc(remind.finished_at).format(noZone)
-                    : moment().format(noZone))}
+                "finished at: " + moment.utc(remind.finished_at).format(noZone)}
             </p>
           </div>
         </div>

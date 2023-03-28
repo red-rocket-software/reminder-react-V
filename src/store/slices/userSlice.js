@@ -19,7 +19,6 @@ export const updateNotificationStatus = createAsyncThunk(
   }
 );
 
-
 const initialState = {
   notifyStatus: false,
 };
@@ -30,6 +29,7 @@ const userSlice = createSlice({
   reducers: {},
   extraReducers: {
     [updateNotificationStatus.fulfilled]: (state, action) => {
+      console.log(action.payload);
       state.notifyStatus = action.payload;
     },
   },

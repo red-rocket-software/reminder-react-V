@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "../../utils/axios.js";
 import moment from "moment";
+import { onCreate_deadline_at_noZone } from "../../utils/time";
 
 export const fetchReminds = createAsyncThunk(
   "remind/fetchAllReminds",
@@ -24,15 +25,14 @@ export const fetchReminds = createAsyncThunk(
 
 export const createRemind = createAsyncThunk(
   "remind/createRemind",
-  async (remind, {rejectWithValue, fulfillWithValue}) => {
+  async (remind, { rejectWithValue, fulfillWithValue }) => {
     try {
-      const response = await axios.post(`/remind`, remind, { withCredentials: true });
-      if (!response.ok){
-        return rejectWithValue(response.data)
-      }
-      return fulfillWithValue(response.data)
+      const response = await axios.post(`/remind`, remind, {
+        withCredentials: true,
+      });
+      return fulfillWithValue(response.data);
     } catch (error) {
-      throw rejectWithValue(error.response.data)
+      throw rejectWithValue(error.response.data);
     }
   }
 );
@@ -178,12 +178,13 @@ const remindSlice = createSlice({
         completed: completed,
         notify_period: notify_period,
       };
+
       state.items.unshift(newRemind);
       state.error = null;
-      state.status = 'success';
+      state.status = "success";
     },
     [createRemind.rejected]: (state, action) => {
-      state.status = 'error';
+      state.status = "error";
       state.items = [];
       state.error = action.payload.message;
     },
@@ -228,6 +229,7 @@ const remindSlice = createSlice({
         const remind = state.items.find((remind) => remind.id === id);
         if (remind) {
           remind.completed = status;
+          remind.finished_at = moment().format(onCreate_deadline_at_noZone);
         }
       }
     },
