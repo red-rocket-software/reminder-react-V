@@ -16,6 +16,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import * as moment from "moment";
 import DateTimePicker from "react-datetime-picker";
 import { getClasses } from "../utils/getClasses";
+import { useSelector } from "react-redux";
 
 //  inline styles
 const dropin = {
@@ -53,6 +54,8 @@ function RemindModal({
   const [deadline_notify, setDeadline_notify] = useState(false);
   const [notify_period, setNotify_period] = useState([]);
 
+  const error = useSelector((state) => state.reminds.error);
+  console.log(error);
   // a function that does not skip array elements of type "0001-01-01T00:00:00Z"
   const getNotificationArrayFromRemind = useCallback((reminds) => {
     const filteredReminds = reminds?.reduce((acc, remind) => {
@@ -93,7 +96,6 @@ function RemindModal({
         toast.error("Please enter a title.");
         return;
       }
-
       if (description && deadline_at) {
         if (type === "add") {
           onCreate({
@@ -136,7 +138,7 @@ function RemindModal({
             return;
           }
         }
-        setModalOpen(false);
+          setModalOpen(false);
       }
     },
     [
