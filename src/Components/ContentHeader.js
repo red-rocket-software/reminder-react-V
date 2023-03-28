@@ -25,18 +25,20 @@ function ContentHeader() {
 
   const { filter, timeRange } = useSelector((state) => state.reminds);
 
-  const onCreateRemind = useCallback(
-    (data) => {
+  const onCreateRemind = 
+    async (data) => {
       try {
-        dispatch(createRemind(data));
-        toast.success("Remind Added Successfully");
+        const remind = await dispatch(createRemind(data))
+        if(remind.payload.code === 422){
+          toast.error(remind.payload.message);
+        }else {
+          toast.success("Remind Added Successfully");
+        }
       } catch (error) {
         toast.error("Failed To Add Remind");
-        console.log(error);
       }
-    },
-    [dispatch]
-  );
+    };
+
 
   const updatedFilter = useCallback(
     (e) => {

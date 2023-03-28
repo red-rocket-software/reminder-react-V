@@ -24,11 +24,15 @@ export const fetchReminds = createAsyncThunk(
 
 export const createRemind = createAsyncThunk(
   "remind/createRemind",
-  async (remind) => {
+  async (remind, {rejectWithValue, fulfillWithValue}) => {
     try {
-      axios.post(`/remind`, remind, { withCredentials: true });
+      const response = await axios.post(`/remind`, remind, { withCredentials: true });
+      if (!response.ok){
+        return rejectWithValue(response.data)
+      }
+      return fulfillWithValue(response.data)
     } catch (error) {
-      console.log(error);
+      throw rejectWithValue(error.response.data)
     }
   }
 );
@@ -37,7 +41,7 @@ export const removeRemind = createAsyncThunk(
   "remind/removeRemind",
   async (id) => {
     try {
-      axios.delete(`/remind/${id}`, { withCredentials: true });
+      await axios.delete(`/remind/${id}`, { withCredentials: true });
     } catch (error) {
       console.log(error);
     }
@@ -59,7 +63,7 @@ export const upateRemindStatus = createAsyncThunk(
   async (params) => {
     try {
       const { id, status } = params;
-      axios.put(
+      await axios.put(
         `/status/${id}`,
         { completed: status },
         { withCredentials: true }
@@ -155,11 +159,14 @@ const remindSlice = createSlice({
         deadline_at: action.meta.arg.deadline_at,
         completed: false,
       };
-
       state.items.unshift(newRemind);
+      state.error = null;
+      state.status = 'success';
     },
     [createRemind.rejected]: (state, action) => {
-      state.error = action.error.message;
+      state.status = 'error';
+      state.items = [];
+      state.error = action.payload.message;
     },
     //delete remind
     [removeRemind.fulfilled]: (state, action) => {
