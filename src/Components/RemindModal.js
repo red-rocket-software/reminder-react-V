@@ -67,15 +67,24 @@ function RemindModal({
     return filteredReminds ? filteredReminds : [];
   }, []);
 
+  // console.log(
+  //   "deadline_at: ",
+  //   moment.utc(deadline_at).format(onCreate_deadline_at)
+  // );
+  // console.log(
+  //   "notify_period: ",
+  //   moment.utc(notify_period).format(onCreate_deadline_at)
+  // );
+
   // load initial values to state
   useEffect(() => {
     if (type === "update") {
       setDescription(remind.description);
       setCompleted(remind.completed);
       setDeadline_at(
-        new Date(
+        
           moment.utc(remind?.deadline_at).format(onCreate_deadline_at_noZone)
-        )
+        
       );
       setDeadline_notify(remind.deadline_notify);
       setNotify_period([
@@ -127,9 +136,7 @@ function RemindModal({
               remind: {
                 ...remind,
                 description,
-                deadline_at: moment(deadline_at).format(
-                  onCreate_deadline_at_noZone
-                ),
+                deadline_at: deadline_at,
                 deadline_notify,
                 notify_period,
               },
@@ -285,7 +292,9 @@ function RemindModal({
                           <NotificationForm
                             key={index}
                             itemID={index}
-                            deadline={deadline_at.getTime()}
+                            deadline={moment(deadline_at).format(
+                              onCreate_deadline_at
+                            )}
                             period_item={item}
                             onDelete={deleteNotificationValueInArray}
                             onValue={setNotificationValueInArray}

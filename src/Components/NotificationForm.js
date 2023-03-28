@@ -3,6 +3,10 @@ import { SelectButton } from "./Button";
 import moment from "moment";
 import { MdClose } from "react-icons/md";
 import styles from "../styles/modules/notificationForm.module.scss";
+import {
+  onCreate_deadline_at,
+  onCreate_deadline_at_noZone,
+} from "../utils/time";
 
 const NotificationForm = ({
   period_item,
@@ -13,7 +17,12 @@ const NotificationForm = ({
 }) => {
   const [timeValue, setTimeValue] = useState(1);
   const [timeType, setTimeType] = useState("minutes");
-  const [maxTimeValue, setMaxTimeValue] = useState("");
+  const [maxTimeValue, setMaxTimeValue] = useState(null);
+  const [initialTimeDiff, _] = useState(
+    moment(deadline).diff(moment(period_item), "minutes")
+  );
+  
+  console.log(initialTimeDiff);
 
   useEffect(() => {
     if (period_item) {

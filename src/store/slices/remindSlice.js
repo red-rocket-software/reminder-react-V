@@ -52,9 +52,14 @@ export const updateRemind = createAsyncThunk(
   "remind/udateRemind",
   async (params) => {
     const { id, remind } = params;
-    await axios.put(`/remind/${id}`, remind, {
-      withCredentials: true,
-    });
+    try {
+      const { data } = await axios.put(`/remind/${id}`, remind, {
+        withCredentials: true,
+      });
+      return data;
+    } catch (error) {
+      console.log(error);
+    }
   }
 );
 
@@ -152,12 +157,26 @@ const remindSlice = createSlice({
     },
     //create  remind
     [createRemind.fulfilled]: (state, action) => {
+      const {
+        id,
+        description,
+        user_id,
+        deadline_at,
+        created_at,
+        completed,
+        notify_period,
+        deadline_notify,
+      } = action.payload;
+
       const newRemind = {
-        id: action.meta.requestId, //! change remind ID!!!!!
-        description: action.meta.arg.description,
-        user_id: action.meta.requestId,
-        deadline_at: action.meta.arg.deadline_at,
-        completed: false,
+        id: id,
+        description: description,
+        user_id: user_id,
+        deadline_at: deadline_at,
+        deadline_notify: deadline_notify,
+        created_at: created_at,
+        completed: completed,
+        notify_period: notify_period,
       };
       state.items.unshift(newRemind);
       state.error = null;
@@ -181,11 +200,12 @@ const remindSlice = createSlice({
       const {
         id,
         description,
-        completed,
         deadline_at,
-        deadline_notify,
+        completed,
         notify_period,
-      } = action.meta.arg.remind;
+        deadline_notify,
+      } = action.payload;
+
       const remind = state.items.find((remind) => remind.id === id);
       if (remind) {
         remind.description = description;
