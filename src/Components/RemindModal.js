@@ -54,9 +54,6 @@ function RemindModal({
   const [deadline_notify, setDeadline_notify] = useState(false);
   const [notify_period, setNotify_period] = useState([]);
 
-  // const { user } = useSelector((state) => state.auth);
-  // console.log(user.notification);
-
   // a function that does not skip array elements of type "0001-01-01T00:00:00Z"
   const getNotificationArrayFromRemind = useCallback((reminds) => {
     const filteredReminds = reminds?.reduce((acc, remind) => {
@@ -114,7 +111,6 @@ function RemindModal({
         }
 
         if (type === "update") {
-          console.log(deadline_at);
           if (
             remind.description !== description ||
             remind.completed !== completed ||
