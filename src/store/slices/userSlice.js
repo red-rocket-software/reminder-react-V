@@ -30,7 +30,6 @@ const userSlice = createSlice({
   reducers: {},
   extraReducers: {
     [updateNotificationStatus.fulfilled]: (state, action) => {
-      console.log(action.payload);
       state.notifyStatus = action.payload;
     },
   },
