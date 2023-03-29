@@ -128,6 +128,7 @@ function RemindModal({
               remind: {
                 ...remind,
                 description,
+                finished_at: null,
                 deadline_at: `${moment(deadline_at).format(
                   onCreate_deadline_at_noZone
                 )}Z`,
