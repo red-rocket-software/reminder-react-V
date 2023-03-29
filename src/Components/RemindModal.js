@@ -283,9 +283,8 @@ function RemindModal({
               {/* notification section */}
 
               {notifyStatus === "true" &&
-              transformFromStringToDate(
-                moment.utc(deadline_at).format(noZone)
-              ) > transformFromStringToDate(moment().format(noZone)) &&
+              deadline_at >
+                transformFromStringToDate(moment().format(noZone)) &&
               notifyStatus ? (
                 <div
                   className={getClasses([
