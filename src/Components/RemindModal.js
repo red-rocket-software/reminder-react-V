@@ -188,7 +188,10 @@ function RemindModal({
   //^ notification handle functions
   const onAddNotification = useCallback(() => {
     setDeadline_notify(true);
-    setNotify_period((prev) => [...prev, ""]);
+    setNotify_period((prev) => [
+      ...prev,
+      new Date(),
+    ]);
   }, []);
 
   const setNotificationValueInArray = useCallback(
