@@ -61,9 +61,10 @@ const NotificationForm = ({
       e.preventDefault();
       setTimeType(e.target.value);
       setMaxTimeValue(moment(deadline).diff(moment(), e.target.value));
-      setTimeValue("1");
+      setTimeValue(1);
+      onValue(itemID, moment(deadline).subtract(1, e.target.value));
     },
-    [deadline]
+    [deadline, itemID, onValue]
   );
 
   const changeTimeValue = useCallback(

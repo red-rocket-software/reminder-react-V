@@ -29,7 +29,7 @@ function ContentHeader() {
     async (data) => {
       try {
         const remind = await dispatch(createRemind(data))
-        if(remind.payload.code === 422){
+        if(remind.payload.code){
           toast.error(remind.payload.message);
         }else {
           toast.success("Remind Added Successfully");
