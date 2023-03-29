@@ -226,13 +226,6 @@ function RemindModal({
     [deadline_at]
   );
 
-  console.log(
-    "deadline: ",
-    // deadline_at
-    transformFromStringToDate(moment.utc(deadline_at).format(noZone))
-  );
-  console.log("now: ", transformFromStringToDate(moment().format(noZone)));
-
   return (
     <AnimatePresence>
       {modalOpen && (
@@ -290,8 +283,8 @@ function RemindModal({
               {/* notification section */}
 
               {notifyStatus === "true" &&
-              deadline_at
-               > transformFromStringToDate(moment().format(noZone)) &&
+              deadline_at >
+                transformFromStringToDate(moment().format(noZone)) &&
               notifyStatus ? (
                 <div
                   className={getClasses([
